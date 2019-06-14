@@ -1,0 +1,132 @@
+openapi: 3.0.0
+info:
+  description: balloon API
+  version: 1.0.0
+  title: balloon API
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths:
+  /api/v2/groups:
+    get:
+      tags:
+        - core.v2
+      summary: Get groups
+      description: A group is a colletion of users
+      operationId: getGroups
+      parameters:
+        - in: query
+          name: query
+          description: |-
+            Specify a MongoDB based resource query
+            (https://docs.mongodb.com/manual/tutorial/query-documents) using
+            JSON (For example: {"name": {$regex: 'foo.*'}}).
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: attributes
+          description: Filter attributes
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: offset
+          description: |-
+            Objects offset, per default it starts from 0. You may also request a
+            negative offset which will return results from the end [total -
+            offset].
+          required: false
+          schema:
+            type: number
+        - in: query
+          name: limit
+          description: Objects limit, per default 20 objects will get returned
+          required: false
+          schema:
+            type: number
+        - in: query
+          name: sort
+          description: |-
+            Specify a MongoDB sort operation
+            (https://docs.mongodb.com/manual/reference/method/cursor.sort/)
+            using JSON (For example: {"name": -1}).
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/corev2Groups"
+          links:
+            next:
+              operationId: getGroups
+              parameters:
+                offset: '$response.body#/count'
+        "403":
+          description: Access denied
+components:
+  schemas:
+    corev2ResourceList:
+      type: object
+      properties:
+        kind:
+          description: The resource type, always List.
+          type: string
+          default: List
+        count:
+          description: Holds the number of items in the current list response.
+          type: number
+        total:
+          description: Holds the number of total available items on the server. Note that a
+            List resource is always paged. You need to traverse with offset and
+            limit to request further resources in the list.
+          type: number
+    corev2Resource:
+      type: object
+      properties:
+        id:
+          description: Unique 12-byte resource identifier. Note this is a MongoDB ObjectId.
+            The name is the standard resource identifier, the id only useful to
+            verify that a given resource was completely recreated. An ID is
+            immutable and will be created on the server.
+          type: string
+        created:
+          description: ISO 8601 timestamp when the resource was created.
+          type: string
+    corev2Groups:
+      description: A list of groups.
+      allOf:
+        - $ref: "#/components/schemas/corev2ResourceList"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/corev2Group"
+    corev2Group:
+      description: A group contains user resources.
+      allOf:
+        - $ref: "#/components/schemas/corev2Resource"
+        - type: object
+          properties:
+            changed:
+              description: ISO 8601 timestamp when the resource was changed.
+              type: string
+            name:
+              description: Group name.
+              type: string
+            namespace:
+              description: User namespace.
+              type: string
+            member:
+              description: Array of user id's.
+              type: array
+              items:
+                type: string
+

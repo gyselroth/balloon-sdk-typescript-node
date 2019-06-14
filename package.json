@@ -1,14 +1,16 @@
 {
   "name": "@gyselroth/balloon-sdk-node",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha1",
   "description": "The official balloon sdk for node with typescript support",
   "main": "build/api.js",
   "scripts": {
-    "prebuild": "tsc",
     "start": "tsc && nodejs build/main.js",
-    "build": "tsc && jest --coverage",
+    "build": "npm run codegen && tsc && npm run test",
     "test": "jest --coverage",
-    "coveralls": "coveralls < coverage/lcov.info"
+    "fetch": "wget https://raw.githubusercontent.com/gyselroth/balloon/master/src/app/Balloon.App.Api/swagger.yml && wget https://raw.githubusercontent.com/gyselroth/balloon/master/src/app/Balloon.App.Api/openapi.yml",
+    "codegen": "java -jar swagger-codegen/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar generate -i swagger.yml -l typescript-node --http-user-agent 'balloon typescript-node sdk' -t src -o src --reserved-words-mappings=import=import,class=class -D modelPropertyNaming=original && sed \"s/W = <any> 'w+'/WP = <any> 'w+'/g\" -i src/api.ts",
+    "coveralls": "coveralls < coverage/lcov.info",
+    "full-build": "npm run fetch && npm run codegen && npm run build"
   },
   "repository": {
     "type": "git",

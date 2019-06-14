@@ -5,12 +5,9 @@ script:
 - cd swagger-codegen
 - mvn clean install
 - cd ..
-- wget https://raw.githubusercontent.com/gyselroth/balloon/dev/src/lib/Rest/v1/swagger.yml
-- java -jar swagger-codegen/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar
-  generate -i swagger.yml -l typescript-node --http-user-agent "balloon typescript-node
-  sdk" -t src -o src --reserved-words-mappings=import=import,class=class -D modelPropertyNaming=original
+script:
 - npm install
-- npm run build
+- npm run full-build  
 after_success:
 - git config --global user.email "travis@travis-ci.org"
 - git config --global user.name "Travis CI"

@@ -1,10 +1,10 @@
-const V2Api = require('../src/api').V2Api;
+import { CoreV2Api } from '../src/api';
 jest.mock('request');
 
 describe('core api v2', () => {
   describe('users api', () => {
     it('Get all users', () => {
-      var client = new V2Api();
+      var client = new CoreV2Api();
       var response = client.getUsers();
     });
   });

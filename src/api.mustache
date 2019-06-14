@@ -29,6 +29,7 @@ let primitives = [
 class ObjectSerializer {
 
     public static findCorrectType(data: any, expectedType: string) {
+        if(expectedType)
         if (data == undefined) {
             return expectedType;
         } else if (primitives.indexOf(expectedType.toLowerCase()) !== -1) {
@@ -448,7 +449,8 @@ export class {{classname}} {
             }
         }
 
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true) {
+        var returnType = "{{{returnType}}}";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
