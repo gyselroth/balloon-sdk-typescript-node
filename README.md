@@ -18,10 +18,10 @@ npm install --save @gyselroth/balloon-sdk-node
 ### Example request
 
 ```javascript
-const { V2Api, HttpBasicAuth } = require('@gyselroth/balloon-sdk-node');
+const { CoreV2Api, HttpBasicAuth } = require('@gyselroth/balloon-sdk-node');
 
 var server = 'https://localhost';
-var client = new V2Api(server);
+var client = new CoreV2Api(server);
 var basic = new HttpBasicAuth('admin', 'admin');
 client.setDefaultAuthentication(basic);
 
