@@ -1,10 +1,11 @@
 {
   "name": "@gyselroth/balloon-sdk-node",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha4",
   "description": "The official balloon sdk for node with typescript support",
   "main": "build/api.js",
   "scripts": {
     "start": "tsc && nodejs build/main.js",
+    "compile": "tsc",
     "build": "npm run codegen && tsc && npm run test",
     "test": "jest --coverage",
     "fetch": "wget https://raw.githubusercontent.com/gyselroth/balloon/master/src/app/Balloon.App.Api/swagger.yml && wget https://raw.githubusercontent.com/gyselroth/balloon/master/src/app/Balloon.App.Api/openapi.yml",
@@ -17,7 +18,7 @@
     "url": "git+https://github.com/gyselroth/balloon-sdk-typescript-node.git"
   },
   "keywords": [
-    "tubee",
+    "balloon",
     "node",
     "sdk"
   ],

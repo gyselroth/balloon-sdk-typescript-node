@@ -143,7 +143,7 @@ class ObjectSerializer {
 /**
 * Master node from which the slave is from.
 */
-export class ConvertV2SlaveMaster {
+export class ConvertV3SlaveMaster {
     /**
     * The id of the node.
     */
@@ -168,14 +168,14 @@ export class ConvertV2SlaveMaster {
         }    ];
 
     static getAttributeTypeMap() {
-        return ConvertV2SlaveMaster.attributeTypeMap;
+        return ConvertV3SlaveMaster.attributeTypeMap;
     }
 }
 
 /**
 * The generated slave node. As long as the slave has not yet been created this is null.
 */
-export class ConvertV2SlaveSlave {
+export class ConvertV3SlaveSlave {
     /**
     * The id of the node.
     */
@@ -200,7 +200,7 @@ export class ConvertV2SlaveSlave {
         }    ];
 
     static getAttributeTypeMap() {
-        return ConvertV2SlaveSlave.attributeTypeMap;
+        return ConvertV3SlaveSlave.attributeTypeMap;
     }
 }
 
@@ -220,7 +220,7 @@ export class CoreV2AclRule {
     * Privilege.
     */
     'privilege'?: CoreV2AclRule.PrivilegeEnum;
-    'role'?: CoreV2AclRuleRole;
+    'role'?: CoreV3AclRuleRole;
 
     static discriminator: string | undefined = undefined;
 
@@ -243,7 +243,7 @@ export class CoreV2AclRule {
         {
             "name": "role",
             "baseName": "role",
-            "type": "CoreV2AclRuleRole"
+            "type": "CoreV3AclRuleRole"
         }    ];
 
     static getAttributeTypeMap() {
@@ -260,48 +260,16 @@ export namespace CoreV2AclRule {
         Rw = <any> 'rw',
         W = <any> 'w',
         M = <any> 'm',
-        WP = <any> 'w+',
+        Rp = <any> 'rp',
         D = <any> 'd'
     }
 }
-/**
-* Points to the share owner. If the node is not part of any share this is null.
-*/
-export class CoreV2AclRuleRole {
-    /**
-    * The id of the role resource.
-    */
-    'id'?: string;
-    /**
-    * The name of role resource.
-    */
-    'name'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2AclRuleRole.attributeTypeMap;
-    }
-}
-
 /**
 * Describes the api root.
 */
 export class CoreV2ApiRoot {
     'name'?: string;
-    'api'?: number;
+    'api_version'?: number;
 
     static discriminator: string | undefined = undefined;
 
@@ -312,8 +280,8 @@ export class CoreV2ApiRoot {
             "type": "string"
         },
         {
-            "name": "api",
-            "baseName": "api",
+            "name": "api_version",
+            "baseName": "api_version",
             "type": "number"
         }    ];
 
@@ -401,6 +369,35 @@ export class CoreV2Delta {
     }
 }
 
+export class CoreV2Error {
+    'code'?: number;
+    'message'?: string;
+    'error'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "code",
+            "baseName": "code",
+            "type": "number"
+        },
+        {
+            "name": "message",
+            "baseName": "message",
+            "type": "string"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV2Error.attributeTypeMap;
+    }
+}
+
 /**
 * Event log entry. Each event represents an executed operation on the server.
 */
@@ -417,11 +414,11 @@ export class CoreV2EventLog {
     * The event operation.
     */
     'operation'?: CoreV2EventLog.OperationEnum;
-    'node'?: CoreV2EventLogNode;
-    'parent'?: CoreV2EventLogParent;
-    'share'?: CoreV2NodeShare;
-    'user'?: CoreV2FileHistoryUser;
-    'client'?: CoreV2EventLogClient;
+    'node'?: CoreV3EventNode;
+    'parent'?: CoreV3EventParent;
+    'share'?: CoreV3NodeShare;
+    'user'?: CoreV3FileHistoryUser;
+    'client'?: CoreV3EventClient;
 
     static discriminator: string | undefined = undefined;
 
@@ -444,27 +441,27 @@ export class CoreV2EventLog {
         {
             "name": "node",
             "baseName": "node",
-            "type": "CoreV2EventLogNode"
+            "type": "CoreV3EventNode"
         },
         {
             "name": "parent",
             "baseName": "parent",
-            "type": "CoreV2EventLogParent"
+            "type": "CoreV3EventParent"
         },
         {
             "name": "share",
             "baseName": "share",
-            "type": "CoreV2NodeShare"
+            "type": "CoreV3NodeShare"
         },
         {
             "name": "user",
             "baseName": "user",
-            "type": "CoreV2FileHistoryUser"
+            "type": "CoreV3FileHistoryUser"
         },
         {
             "name": "client",
             "baseName": "client",
-            "type": "CoreV2EventLogClient"
+            "type": "CoreV3EventClient"
         }    ];
 
     static getAttributeTypeMap() {
@@ -500,120 +497,6 @@ export namespace CoreV2EventLog {
     }
 }
 /**
-* Describes the client from which the operation was executed.
-*/
-export class CoreV2EventLogClient {
-    /**
-    * The type of the client.
-    */
-    'type'?: string;
-    /**
-    * The client app name.
-    */
-    'app'?: string;
-    /**
-    * The version of the client app.
-    */
-    'v'?: string;
-    /**
-    * The hostname of the client.
-    */
-    'hostname'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "type",
-            "baseName": "type",
-            "type": "string"
-        },
-        {
-            "name": "app",
-            "baseName": "app",
-            "type": "string"
-        },
-        {
-            "name": "v",
-            "baseName": "v",
-            "type": "string"
-        },
-        {
-            "name": "hostname",
-            "baseName": "hostname",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2EventLogClient.attributeTypeMap;
-    }
-}
-
-/**
-* Resolves to the node involved in the operation.
-*/
-export class CoreV2EventLogNode {
-    /**
-    * The id of the node
-    */
-    'id'?: string;
-    /**
-    * The name of the node
-    */
-    'name'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2EventLogNode.attributeTypeMap;
-    }
-}
-
-/**
-* Points to the parent collection. If the node is in the root this is null.
-*/
-export class CoreV2EventLogParent {
-    /**
-    * The id of the parent collection
-    */
-    'id'?: string;
-    /**
-    * The name of the parent collection
-    */
-    'name'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2EventLogParent.attributeTypeMap;
-    }
-}
-
-/**
 * File history.
 */
 export class CoreV2FileHistory {
@@ -624,12 +507,12 @@ export class CoreV2FileHistory {
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
     /**
     * Type of change.
     */
     'type'?: number;
-    'user'?: CoreV2FileHistoryUser;
+    'user'?: CoreV3FileHistoryUser;
 
     static discriminator: string | undefined = undefined;
 
@@ -642,7 +525,7 @@ export class CoreV2FileHistory {
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "type",
@@ -652,75 +535,11 @@ export class CoreV2FileHistory {
         {
             "name": "user",
             "baseName": "user",
-            "type": "CoreV2FileHistoryUser"
+            "type": "CoreV3FileHistoryUser"
         }    ];
 
     static getAttributeTypeMap() {
         return CoreV2FileHistory.attributeTypeMap;
-    }
-}
-
-/**
-* Resolves to user who executed the operation.
-*/
-export class CoreV2FileHistoryUser {
-    /**
-    * The id of the share owner.
-    */
-    'id'?: string;
-    /**
-    * The username of the share owner.
-    */
-    'name'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2FileHistoryUser.attributeTypeMap;
-    }
-}
-
-/**
-* A JSON Patch according rfc6902.
-*/
-export class CoreV2JsonPatch {
-    'op'?: string;
-    'path'?: string;
-    'value'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "op",
-            "baseName": "op",
-            "type": "string"
-        },
-        {
-            "name": "path",
-            "baseName": "path",
-            "type": "string"
-        },
-        {
-            "name": "value",
-            "baseName": "value",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2JsonPatch.attributeTypeMap;
     }
 }
 
@@ -873,38 +692,6 @@ export class CoreV2NodeParent {
 }
 
 /**
-* Points to the shared node (or share reference). If the node is not part of any share this is null.
-*/
-export class CoreV2NodeShare {
-    /**
-    * The id of the share collection. If the share is a reference (incoming share) it will point to the share reference and not the id of the shared collection itself.
-    */
-    'id'?: string;
-    /**
-    * The name of the share (or share reference).
-    */
-    'name'?: string;
-
-    static discriminator: string | undefined = undefined;
-
-    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
-        {
-            "name": "id",
-            "baseName": "id",
-            "type": "string"
-        },
-        {
-            "name": "name",
-            "baseName": "name",
-            "type": "string"
-        }    ];
-
-    static getAttributeTypeMap() {
-        return CoreV2NodeShare.attributeTypeMap;
-    }
-}
-
-/**
 * Points to the share owner. If the node is not part of any share this is null.
 */
 export class CoreV2NodeShareowner {
@@ -936,8 +723,71 @@ export class CoreV2NodeShareowner {
     }
 }
 
+/**
+* OAUTH2 access token response according RFC6749 https://tools.ietf.org/html/rfc6749#section-4.3.3
+*/
+export class CoreV2OAuth2Token {
+    /**
+    * Resource access_token.
+    */
+    'access_token'?: string;
+    /**
+    * The number of seconds the issues acceess_token is valid for. This is usually 1hour.
+    */
+    'expires_in'?: number;
+    /**
+    * The type of token. This is usually a Bearer token.
+    */
+    'token_type'?: string;
+    /**
+    * The scopes.
+    */
+    'scope'?: 'ERRORUNKNOWN';
+    /**
+    * An optional refresh token to get new access_tokens via the refresh_token grant type.
+    */
+    'refresh_token'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "access_token",
+            "baseName": "access_token",
+            "type": "string"
+        },
+        {
+            "name": "expires_in",
+            "baseName": "expires_in",
+            "type": "number"
+        },
+        {
+            "name": "token_type",
+            "baseName": "token_type",
+            "type": "string"
+        },
+        {
+            "name": "scope",
+            "baseName": "scope",
+            "type": "ERRORUNKNOWN"
+        },
+        {
+            "name": "refresh_token",
+            "baseName": "refresh_token",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV2OAuth2Token.attributeTypeMap;
+    }
+}
+
 export class CoreV2Resource {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -945,15 +795,20 @@ export class CoreV2Resource {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -963,7 +818,7 @@ export class CoreV2Resource {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         }    ];
 
     static getAttributeTypeMap() {
@@ -975,7 +830,7 @@ export class CoreV2ResourceList {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -993,8 +848,8 @@ export class CoreV2ResourceList {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1066,6 +921,909 @@ export class CoreV2UserNodeAttributeSummary extends null<String, Array> {
 }
 
 /**
+* Each access rule may hold multiple rules.
+*/
+export class CoreV3AccessRuleDefinition {
+    /**
+    * A list of access-role names to match the given rule.
+    */
+    'roles'?: Array<string>;
+    /**
+    * List of allowed HTTP rfc7231 verbs, you may also specify a wildcard to match all verbs.
+    */
+    'verbs'?: Array<CoreV3AccessRuleDefinition.VerbsEnum>;
+    /**
+    * The resource type (attribute) to select. Might be `*` to select any.
+    */
+    'selector'?: Array<string>;
+    /**
+    * The resource value to match. Might be `*` to match any.
+    */
+    'match'?: Array<string>;
+    /**
+    * A list of accessible fields of a resource. Might contain `*` to include all fields.
+    */
+    'fields'?: Array<string>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "roles",
+            "baseName": "roles",
+            "type": "Array<string>"
+        },
+        {
+            "name": "verbs",
+            "baseName": "verbs",
+            "type": "Array<CoreV3AccessRuleDefinition.VerbsEnum>"
+        },
+        {
+            "name": "selector",
+            "baseName": "selector",
+            "type": "Array<string>"
+        },
+        {
+            "name": "match",
+            "baseName": "match",
+            "type": "Array<string>"
+        },
+        {
+            "name": "fields",
+            "baseName": "fields",
+            "type": "Array<string>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AccessRuleDefinition.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3AccessRuleDefinition {
+    export enum VerbsEnum {
+        Star = <any> '*',
+        GET = <any> 'GET',
+        POST = <any> 'POST',
+        PUT = <any> 'PUT',
+        PATCH = <any> 'PATCH',
+        DELETE = <any> 'DELETE',
+        HEAD = <any> 'HEAD'
+    }
+}
+/**
+* ACL rule.
+*/
+export class CoreV3AclRule {
+    /**
+    * The type of the resource.
+    */
+    'type'?: CoreV3AclRule.TypeEnum;
+    /**
+    * ACL rules.
+    */
+    'id'?: string;
+    /**
+    * Privilege.
+    */
+    'privilege'?: CoreV3AclRule.PrivilegeEnum;
+    'role'?: CoreV3AclRuleRole;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "CoreV3AclRule.TypeEnum"
+        },
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "privilege",
+            "baseName": "privilege",
+            "type": "CoreV3AclRule.PrivilegeEnum"
+        },
+        {
+            "name": "role",
+            "baseName": "role",
+            "type": "CoreV3AclRuleRole"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AclRule.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3AclRule {
+    export enum TypeEnum {
+        User = <any> 'user',
+        Group = <any> 'group'
+    }
+    export enum PrivilegeEnum {
+        Rw = <any> 'rw',
+        W = <any> 'w',
+        M = <any> 'm',
+        Rp = <any> 'rp',
+        D = <any> 'd'
+    }
+}
+/**
+* Points to the share owner. If the node is not part of any share this is null.
+*/
+export class CoreV3AclRuleRole {
+    /**
+    * The id of the role resource.
+    */
+    'id'?: string;
+    /**
+    * The name of role resource.
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AclRuleRole.attributeTypeMap;
+    }
+}
+
+/**
+* Describes the api root.
+*/
+export class CoreV3ApiRoot {
+    'name'?: string;
+    'api'?: number;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "api",
+            "baseName": "api",
+            "type": "number"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3ApiRoot.attributeTypeMap;
+    }
+}
+
+export class CoreV3EmbeddedResources extends null<String, CoreV3Resource> {
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+    ];
+
+    static getAttributeTypeMap() {
+        return {}
+        //return super.getAttributeTypeMap().concat(CoreV3EmbeddedResources.attributeTypeMap);
+    }
+}
+
+/**
+* Error definiton.
+*/
+export class CoreV3Error {
+    'code'?: number;
+    'message'?: string;
+    'error'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "code",
+            "baseName": "code",
+            "type": "number"
+        },
+        {
+            "name": "message",
+            "baseName": "message",
+            "type": "string"
+        },
+        {
+            "name": "error",
+            "baseName": "error",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Error.attributeTypeMap;
+    }
+}
+
+/**
+* Event log entry. Each event represents an executed operation on the server.
+*/
+export class CoreV3Event {
+    /**
+    * The event id.
+    */
+    'event'?: string;
+    /**
+    * ISO 8601 timestamp when the event was created.
+    */
+    'timestamp'?: string;
+    /**
+    * The event operation.
+    */
+    'operation'?: CoreV3Event.OperationEnum;
+    'node'?: CoreV3EventNode;
+    'parent'?: CoreV3EventParent;
+    'share'?: CoreV3NodeShare;
+    'user'?: CoreV3FileHistoryUser;
+    'client'?: CoreV3EventClient;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "event",
+            "baseName": "event",
+            "type": "string"
+        },
+        {
+            "name": "timestamp",
+            "baseName": "timestamp",
+            "type": "string"
+        },
+        {
+            "name": "operation",
+            "baseName": "operation",
+            "type": "CoreV3Event.OperationEnum"
+        },
+        {
+            "name": "node",
+            "baseName": "node",
+            "type": "CoreV3EventNode"
+        },
+        {
+            "name": "parent",
+            "baseName": "parent",
+            "type": "CoreV3EventParent"
+        },
+        {
+            "name": "share",
+            "baseName": "share",
+            "type": "CoreV3NodeShare"
+        },
+        {
+            "name": "user",
+            "baseName": "user",
+            "type": "CoreV3FileHistoryUser"
+        },
+        {
+            "name": "client",
+            "baseName": "client",
+            "type": "CoreV3EventClient"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Event.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3Event {
+    export enum OperationEnum {
+        DeleteCollectionReference = <any> 'deleteCollectionReference',
+        DeleteCollectionShare = <any> 'deleteCollectionShare',
+        DeleteCollection = <any> 'deleteCollection',
+        AddCollection = <any> 'addCollection',
+        AddFile = <any> 'addFile',
+        AddCollectionShare = <any> 'addCollectionShare',
+        AddCollectionReference = <any> 'addCollectionReference',
+        UndeleteFile = <any> 'undeleteFile',
+        UndeleteCollectionReference = <any> 'undeleteCollectionReference',
+        UndeleteCollectionShare = <any> 'undeleteCollectionShare',
+        RestoreFile = <any> 'restoreFile',
+        RenameFile = <any> 'renameFile',
+        RenameCollection = <any> 'renameCollection',
+        RenameCollectionShare = <any> 'renameCollectionShare',
+        RenameCollectionReference = <any> 'renameCollectionReference',
+        CopyFile = <any> 'copyFile',
+        CopyCollection = <any> 'copyCollection',
+        CopyCollectionShare = <any> 'copyCollectionShare',
+        CopyCollectionRFeference = <any> 'copyCollectionRFeference',
+        MoveFile = <any> 'moveFile',
+        MoveCollection = <any> 'moveCollection',
+        MoveCollectionReference = <any> 'moveCollectionReference',
+        MoveCollectionShare = <any> 'moveCollectionShare'
+    }
+}
+/**
+* Describes the client from which the operation was executed.
+*/
+export class CoreV3EventClient {
+    /**
+    * The type of the client.
+    */
+    'type'?: string;
+    /**
+    * The client app name.
+    */
+    'app'?: string;
+    /**
+    * The version of the client app.
+    */
+    'v'?: string;
+    /**
+    * The hostname of the client.
+    */
+    'hostname'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "string"
+        },
+        {
+            "name": "app",
+            "baseName": "app",
+            "type": "string"
+        },
+        {
+            "name": "v",
+            "baseName": "v",
+            "type": "string"
+        },
+        {
+            "name": "hostname",
+            "baseName": "hostname",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3EventClient.attributeTypeMap;
+    }
+}
+
+/**
+* Resolves to the node involved in the operation.
+*/
+export class CoreV3EventNode {
+    /**
+    * The id of the node
+    */
+    'id'?: string;
+    /**
+    * The name of the node
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3EventNode.attributeTypeMap;
+    }
+}
+
+/**
+* Points to the parent collection. If the node is in the root this is null.
+*/
+export class CoreV3EventParent {
+    /**
+    * The id of the parent collection
+    */
+    'id'?: string;
+    /**
+    * The name of the parent collection
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3EventParent.attributeTypeMap;
+    }
+}
+
+/**
+* File history.
+*/
+export class CoreV3FileHistory {
+    /**
+    * The version number.
+    */
+    'version'?: number;
+    /**
+    * ISO 8601 timestamp when the resource was changed.
+    */
+    'changed'?: Date;
+    /**
+    * Type of change.
+    */
+    'type'?: number;
+    'user'?: CoreV3FileHistoryUser;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "number"
+        },
+        {
+            "name": "changed",
+            "baseName": "changed",
+            "type": "Date"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "number"
+        },
+        {
+            "name": "user",
+            "baseName": "user",
+            "type": "CoreV3FileHistoryUser"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3FileHistory.attributeTypeMap;
+    }
+}
+
+/**
+* Resolves to user who executed the operation.
+*/
+export class CoreV3FileHistoryUser {
+    /**
+    * The id of the share owner.
+    */
+    'id'?: string;
+    /**
+    * The username of the share owner.
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3FileHistoryUser.attributeTypeMap;
+    }
+}
+
+/**
+* A http URI pointing to another resource
+*/
+export class CoreV3Link {
+    'href'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "href",
+            "baseName": "href",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Link.attributeTypeMap;
+    }
+}
+
+/**
+* Contains resource links (URL) to other resources.
+*/
+export class CoreV3Links {
+    'self'?: CoreV3Link;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "self",
+            "baseName": "self",
+            "type": "CoreV3Link"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Links.attributeTypeMap;
+    }
+}
+
+export class CoreV3ListLinks {
+    'self'?: CoreV3Link;
+    'prev'?: CoreV3Link;
+    'next'?: CoreV3Link;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "self",
+            "baseName": "self",
+            "type": "CoreV3Link"
+        },
+        {
+            "name": "prev",
+            "baseName": "prev",
+            "type": "CoreV3Link"
+        },
+        {
+            "name": "next",
+            "baseName": "next",
+            "type": "CoreV3Link"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3ListLinks.attributeTypeMap;
+    }
+}
+
+/**
+* Generic resource metadata
+*/
+export class CoreV3Metadata {
+    /**
+    * Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata.
+    */
+    'annotations'?: { [key: string]: string; };
+    /**
+    * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
+    */
+    'id'?: string;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'created'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'changed'?: Date;
+    /**
+    * Numeric resource version.
+    */
+    'version'?: number;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "annotations",
+            "baseName": "annotations",
+            "type": "{ [key: string]: string; }"
+        },
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "changed",
+            "baseName": "changed",
+            "type": "Date"
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "number"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Metadata.attributeTypeMap;
+    }
+}
+
+/**
+* .
+*/
+export class CoreV3NodeOwner {
+    /**
+    * The id of the share owner.
+    */
+    'id'?: string;
+    /**
+    * The username of the share owner.
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3NodeOwner.attributeTypeMap;
+    }
+}
+
+/**
+* Points to the shared node (or share reference). If the node is not part of any share this is null.
+*/
+export class CoreV3NodeShare {
+    /**
+    * The id of the share collection. If the share is a reference (incoming share) it will point to the share reference and not the id of the shared collection itself.
+    */
+    'id'?: string;
+    /**
+    * The name of the share (or share reference).
+    */
+    'name'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "id",
+            "baseName": "id",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3NodeShare.attributeTypeMap;
+    }
+}
+
+/**
+* Holds the status of the process.
+*/
+export class CoreV3ProcessStatus {
+    /**
+    * The result code of the process.
+    */
+    'code'?: number;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "code",
+            "baseName": "code",
+            "type": "number"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3ProcessStatus.attributeTypeMap;
+    }
+}
+
+export class CoreV3Resource {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Resource.attributeTypeMap;
+    }
+}
+
+/**
+* A readonly list of resources.
+*/
+export class CoreV3ResourceList {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3ResourceList.attributeTypeMap;
+    }
+}
+
+/**
+* Node share.
+*/
+export class CoreV3Share {
+    /**
+    * The name of the share. By default the name of the node.
+    */
+    'share_name'?: string;
+    /**
+    * ACL rules.
+    */
+    'acl'?: Array<CoreV3AclRule>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "share_name",
+            "baseName": "share_name",
+            "type": "string"
+        },
+        {
+            "name": "acl",
+            "baseName": "acl",
+            "type": "Array<CoreV3AclRule>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Share.attributeTypeMap;
+    }
+}
+
+/**
+* A JSON Patch according rfc6902.
+*/
+export class JsonPatch extends Array<JsonPatchOperation> {
+
+    static discriminator: string | undefined = undefined;
+
+}
+
+/**
+* A JSON Patch according rfc6902.
+*/
+export class JsonPatchOperation {
+    'op'?: string;
+    'path'?: string;
+    /**
+    * May be anyting
+    */
+    'value'?: '';
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "op",
+            "baseName": "op",
+            "type": "string"
+        },
+        {
+            "name": "path",
+            "baseName": "path",
+            "type": "string"
+        },
+        {
+            "name": "value",
+            "baseName": "value",
+            "type": "ERRORUNKNOWN"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return JsonPatchOperation.attributeTypeMap;
+    }
+}
+
+/**
 * Mail
 */
 export class NotificationV2Mail {
@@ -1098,9 +1856,41 @@ export class NotificationV2Mail {
 }
 
 /**
+* Mail
+*/
+export class NotificationV3Mail {
+    'receiver'?: Array<string>;
+    'subject'?: string;
+    'body'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "receiver",
+            "baseName": "receiver",
+            "type": "Array<string>"
+        },
+        {
+            "name": "subject",
+            "baseName": "subject",
+            "type": "string"
+        },
+        {
+            "name": "body",
+            "baseName": "body",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return NotificationV3Mail.attributeTypeMap;
+    }
+}
+
+/**
 * A notification may point to a node. If there is no node given this is null.
 */
-export class NotificationV2NotificationNode {
+export class NotificationV3NotificationNode {
     /**
     * The id of the node.
     */
@@ -1125,14 +1915,14 @@ export class NotificationV2NotificationNode {
         }    ];
 
     static getAttributeTypeMap() {
-        return NotificationV2NotificationNode.attributeTypeMap;
+        return NotificationV3NotificationNode.attributeTypeMap;
     }
 }
 
 /**
 * Points to the message. If there is no sender (For example the message came from the system itself) this is null.
 */
-export class NotificationV2NotificationSender {
+export class NotificationV3NotificationSender {
     /**
     * The id of the sender.
     */
@@ -1157,69 +1947,39 @@ export class NotificationV2NotificationSender {
         }    ];
 
     static getAttributeTypeMap() {
-        return NotificationV2NotificationSender.attributeTypeMap;
+        return NotificationV3NotificationSender.attributeTypeMap;
     }
 }
 
 /**
-* WOPI document https://wopi.readthedocs.io/projects/wopirest/en/latest/files/CheckFileInfo.html
+* Single scoped file access token
 */
-export class OfficeV2WopiDocument {
-    'BaseFileName'?: string;
-    'Size'?: string;
-    'Version'?: string;
-    'OwnerId'?: string;
-    'UserId'?: string;
-    'UserFriendlyName'?: string;
-    'UserCanWrite'?: boolean;
-    'PostMessageOrigin'?: string;
+export class WopiV2Token {
+    'access_token'?: string;
+    'ttl'?: number;
+    'node'?: string;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "BaseFileName",
-            "baseName": "BaseFileName",
+            "name": "access_token",
+            "baseName": "access_token",
             "type": "string"
         },
         {
-            "name": "Size",
-            "baseName": "Size",
-            "type": "string"
+            "name": "ttl",
+            "baseName": "ttl",
+            "type": "number"
         },
         {
-            "name": "Version",
-            "baseName": "Version",
-            "type": "string"
-        },
-        {
-            "name": "OwnerId",
-            "baseName": "OwnerId",
-            "type": "string"
-        },
-        {
-            "name": "UserId",
-            "baseName": "UserId",
-            "type": "string"
-        },
-        {
-            "name": "UserFriendlyName",
-            "baseName": "UserFriendlyName",
-            "type": "string"
-        },
-        {
-            "name": "UserCanWrite",
-            "baseName": "UserCanWrite",
-            "type": "boolean"
-        },
-        {
-            "name": "PostMessageOrigin",
-            "baseName": "PostMessageOrigin",
+            "name": "node",
+            "baseName": "node",
             "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return OfficeV2WopiDocument.attributeTypeMap;
+        return WopiV2Token.attributeTypeMap;
     }
 }
 
@@ -1227,7 +1987,11 @@ export class OfficeV2WopiDocument {
 * A convert slave
 */
 export class ConvertV2Slave {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -1235,21 +1999,26 @@ export class ConvertV2Slave {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * Slave format.
     */
     'format'?: string;
-    'master'?: ConvertV2SlaveMaster;
-    'slave'?: ConvertV2SlaveSlave;
+    'master'?: ConvertV3SlaveMaster;
+    'slave'?: ConvertV3SlaveSlave;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -1259,7 +2028,7 @@ export class ConvertV2Slave {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "format",
@@ -1269,12 +2038,12 @@ export class ConvertV2Slave {
         {
             "name": "master",
             "baseName": "master",
-            "type": "ConvertV2SlaveMaster"
+            "type": "ConvertV3SlaveMaster"
         },
         {
             "name": "slave",
             "baseName": "slave",
-            "type": "ConvertV2SlaveSlave"
+            "type": "ConvertV3SlaveSlave"
         }    ];
 
     static getAttributeTypeMap() {
@@ -1289,7 +2058,7 @@ export class ConvertV2Slaves {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1308,8 +2077,8 @@ export class ConvertV2Slaves {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1339,13 +2108,131 @@ export class ConvertV2Slaves {
 }
 
 /**
+* A convert slave
+*/
+export class ConvertV3Slave {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Slave format.
+    */
+    'format'?: string;
+    'master'?: ConvertV3SlaveMaster;
+    'slave'?: ConvertV3SlaveSlave;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "format",
+            "baseName": "format",
+            "type": "string"
+        },
+        {
+            "name": "master",
+            "baseName": "master",
+            "type": "ConvertV3SlaveMaster"
+        },
+        {
+            "name": "slave",
+            "baseName": "slave",
+            "type": "ConvertV3SlaveSlave"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return ConvertV3Slave.attributeTypeMap;
+    }
+}
+
+/**
+* A list of convert slaves.
+*/
+export class ConvertV3Slaves {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<ConvertV3Slave>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<ConvertV3Slave>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return ConvertV3Slaves.attributeTypeMap;
+    }
+}
+
+/**
 * A list of collections.
 */
 export class CoreV2Collections {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1364,8 +2251,8 @@ export class CoreV2Collections {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1401,7 +2288,7 @@ export class CoreV2EventLogs {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1420,8 +2307,8 @@ export class CoreV2EventLogs {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1457,7 +2344,7 @@ export class CoreV2Files {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1476,8 +2363,8 @@ export class CoreV2Files {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1510,7 +2397,11 @@ export class CoreV2Files {
 * A group contains user resources.
 */
 export class CoreV2Group {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -1518,11 +2409,11 @@ export class CoreV2Group {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
     /**
     * Group name.
     */
@@ -1540,9 +2431,14 @@ export class CoreV2Group {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -1552,12 +2448,12 @@ export class CoreV2Group {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "name",
@@ -1587,7 +2483,7 @@ export class CoreV2Groups {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1606,8 +2502,8 @@ export class CoreV2Groups {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1640,7 +2536,11 @@ export class CoreV2Groups {
 * A Node.
 */
 export class CoreV2Node {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -1648,11 +2548,15 @@ export class CoreV2Node {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was deleted.
+    */
+    'deleted'?: Date;
     /**
     * Node name.
     */
@@ -1683,7 +2587,7 @@ export class CoreV2Node {
     */
     'access'?: CoreV2Node.AccessEnum;
     'parent'?: CoreV2NodeParent;
-    'share'?: CoreV2NodeShare;
+    'share'?: CoreV3NodeShare;
     'shareowner'?: CoreV2NodeShareowner;
     /**
     * Is true if the user has an active subscription on this node.
@@ -1694,6 +2598,10 @@ export class CoreV2Node {
     */
     'subscription_exclude_me'?: boolean;
     /**
+    * Subscription throttle interval in seconds
+    */
+    'subscription_throttle'?: number;
+    /**
     * Is true if the node has a protected public sharelink.
     */
     'sharelink_has_password'?: boolean;
@@ -1702,9 +2610,14 @@ export class CoreV2Node {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -1714,12 +2627,17 @@ export class CoreV2Node {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
+        },
+        {
+            "name": "deleted",
+            "baseName": "deleted",
+            "type": "Date"
         },
         {
             "name": "name",
@@ -1769,7 +2687,7 @@ export class CoreV2Node {
         {
             "name": "share",
             "baseName": "share",
-            "type": "CoreV2NodeShare"
+            "type": "CoreV3NodeShare"
         },
         {
             "name": "shareowner",
@@ -1787,6 +2705,11 @@ export class CoreV2Node {
             "type": "boolean"
         },
         {
+            "name": "subscription_throttle",
+            "baseName": "subscription_throttle",
+            "type": "number"
+        },
+        {
             "name": "sharelink_has_password",
             "baseName": "sharelink_has_password",
             "type": "boolean"
@@ -1802,7 +2725,7 @@ export namespace CoreV2Node {
         Rw = <any> 'rw',
         W = <any> 'w',
         M = <any> 'm',
-        WP = <any> 'w+'
+        Rp = <any> 'rp'
     }
 }
 /**
@@ -1812,7 +2735,7 @@ export class CoreV2Nodes {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -1831,8 +2754,8 @@ export class CoreV2Nodes {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -1865,7 +2788,11 @@ export class CoreV2Nodes {
 * A user is used to access the server.
 */
 export class CoreV2User {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -1873,11 +2800,11 @@ export class CoreV2User {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
     /**
     * Unique username.
     */
@@ -1927,9 +2854,14 @@ export class CoreV2User {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -1939,12 +2871,12 @@ export class CoreV2User {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "username",
@@ -2020,7 +2952,7 @@ export class CoreV2Users {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -2039,8 +2971,8 @@ export class CoreV2Users {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -2070,10 +3002,1196 @@ export class CoreV2Users {
 }
 
 /**
+* An access role is defined list which matches authenticated user identifiers.
+*/
+export class CoreV3AccessRole {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Unique role name
+    */
+    'name'?: string;
+    /**
+    * A list of user identifiers which the access role should match. It is also possible to specify a wildcard to match all identifiers.
+    */
+    'selectors'?: Array<string>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "selectors",
+            "baseName": "selectors",
+            "type": "Array<string>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AccessRole.attributeTypeMap;
+    }
+}
+
+/**
+* A list of access roles.
+*/
+export class CoreV3AccessRoles {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3AccessRole>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3AccessRole>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AccessRoles.attributeTypeMap;
+    }
+}
+
+/**
+* An access rule allows to specify what access roles can access which resources.
+*/
+export class CoreV3AccessRule {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Unique rule name
+    */
+    'name'?: string;
+    'rules'?: Array<CoreV3AccessRuleDefinition>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "rules",
+            "baseName": "rules",
+            "type": "Array<CoreV3AccessRuleDefinition>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AccessRule.attributeTypeMap;
+    }
+}
+
+/**
+* A list of access rules.
+*/
+export class CoreV3AccessRules {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3AccessRule>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3AccessRule>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3AccessRules.attributeTypeMap;
+    }
+}
+
+/**
+* A list of collections.
+*/
+export class CoreV3Collections {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Collection>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Collection>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Collections.attributeTypeMap;
+    }
+}
+
+/**
+* A list of events.
+*/
+export class CoreV3Events {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Event>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Event>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Events.attributeTypeMap;
+    }
+}
+
+/**
+* A list of files.
+*/
+export class CoreV3Files {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3File>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3File>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Files.attributeTypeMap;
+    }
+}
+
+/**
+* A group contains user resources.
+*/
+export class CoreV3Group {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Group name.
+    */
+    'name'?: string;
+    /**
+    * User namespace.
+    */
+    'namespace'?: string;
+    /**
+    * Array of user id's.
+    */
+    'members'?: Array<string>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "namespace",
+            "baseName": "namespace",
+            "type": "string"
+        },
+        {
+            "name": "members",
+            "baseName": "members",
+            "type": "Array<string>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Group.attributeTypeMap;
+    }
+}
+
+/**
+* A list of groups.
+*/
+export class CoreV3Groups {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Group>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Group>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Groups.attributeTypeMap;
+    }
+}
+
+/**
+* A Node.
+*/
+export class CoreV3Node {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Node name.
+    */
+    'name'?: string;
+    /**
+    * Mimetype.
+    */
+    'mime'?: string;
+    /**
+    * Readonly only affects the content of the node but not metadata.
+    */
+    'readonly'?: boolean;
+    /**
+    * If node is of type Collection this flag is true.
+    */
+    'directory'?: boolean;
+    /**
+    * The size in bytes. If the node is of type collection the size is the number of child nodes.
+    */
+    'size'?: number;
+    /**
+    * The path abstraction of the node.
+    */
+    'path'?: string;
+    /**
+    * Access level.
+    */
+    'access'?: CoreV3Node.AccessEnum;
+    'share'?: CoreV3NodeShare;
+    'owner'?: CoreV3NodeOwner;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'created'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'changed'?: Date;
+    /**
+    * Is true if the user has an active subscription on this node.
+    */
+    'subscription'?: boolean;
+    /**
+    * Subscription excludes actions from the subscribed user itself.
+    */
+    'subscription_exclude_me'?: boolean;
+    /**
+    * Is true if the node has a protected public sharelink.
+    */
+    'sharelink_has_password'?: boolean;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "mime",
+            "baseName": "mime",
+            "type": "string"
+        },
+        {
+            "name": "readonly",
+            "baseName": "readonly",
+            "type": "boolean"
+        },
+        {
+            "name": "directory",
+            "baseName": "directory",
+            "type": "boolean"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
+        },
+        {
+            "name": "path",
+            "baseName": "path",
+            "type": "string"
+        },
+        {
+            "name": "access",
+            "baseName": "access",
+            "type": "CoreV3Node.AccessEnum"
+        },
+        {
+            "name": "share",
+            "baseName": "share",
+            "type": "CoreV3NodeShare"
+        },
+        {
+            "name": "owner",
+            "baseName": "owner",
+            "type": "CoreV3NodeOwner"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "changed",
+            "baseName": "changed",
+            "type": "Date"
+        },
+        {
+            "name": "subscription",
+            "baseName": "subscription",
+            "type": "boolean"
+        },
+        {
+            "name": "subscription_exclude_me",
+            "baseName": "subscription_exclude_me",
+            "type": "boolean"
+        },
+        {
+            "name": "sharelink_has_password",
+            "baseName": "sharelink_has_password",
+            "type": "boolean"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Node.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3Node {
+    export enum AccessEnum {
+        Rw = <any> 'rw',
+        W = <any> 'w',
+        M = <any> 'm',
+        Rp = <any> 'rp'
+    }
+}
+/**
+* A list of nodes.
+*/
+export class CoreV3Nodes {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Node>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Node>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Nodes.attributeTypeMap;
+    }
+}
+
+/**
+* A session defines a temporary, resumable upload session.
+*/
+export class CoreV3Process {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Points to the related node.
+    */
+    'node'?: string;
+    /**
+    * Process owner
+    */
+    'owner'?: string;
+    'status'?: CoreV3ProcessStatus;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "node",
+            "baseName": "node",
+            "type": "string"
+        },
+        {
+            "name": "owner",
+            "baseName": "owner",
+            "type": "string"
+        },
+        {
+            "name": "status",
+            "baseName": "status",
+            "type": "CoreV3ProcessStatus"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Process.attributeTypeMap;
+    }
+}
+
+/**
+* A server process.
+*/
+export class CoreV3Processes {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Process>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Process>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Processes.attributeTypeMap;
+    }
+}
+
+/**
+* A session defines a temporary, resumable upload session.
+*/
+export class CoreV3Session {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * The size of the uploaded content.
+    */
+    'size'?: number;
+    /**
+    * MD5 has of the uploaded content.
+    */
+    'hash'?: string;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
+        },
+        {
+            "name": "hash",
+            "baseName": "hash",
+            "type": "string"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Session.attributeTypeMap;
+    }
+}
+
+/**
+* A list of upload sessions.
+*/
+export class CoreV3Sessions {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3Session>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3Session>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Sessions.attributeTypeMap;
+    }
+}
+
+/**
+* A user is used to access the server.
+*/
+export class CoreV3User {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Unique username.
+    */
+    'username'?: string;
+    /**
+    * Display name (Usuallly same as username).
+    */
+    'name'?: string;
+    /**
+    * Admin user flag.
+    */
+    'admin'?: boolean;
+    /**
+    * User namespace.
+    */
+    'namespace'?: string;
+    /**
+    * User locale.
+    */
+    'locale'?: string;
+    /**
+    * Authentication source.
+    */
+    'auth'?: CoreV3User.AuthEnum;
+    /**
+    * Is true if the user has a local password set.
+    */
+    'has_password'?: boolean;
+    /**
+    * Hard quota in bytes (Max. limit of storage usage). Note that external storage is not part of the quota. The default is no limit.
+    */
+    'hard_quota'?: number;
+    /**
+    * Soft quota in bytes (Warning of high quota usage). The default is no limit.
+    */
+    'soft_quota'?: number;
+    /**
+    * Available storage in bytes. Is -1 if there is no hard_quota.
+    */
+    'available'?: number;
+    /**
+    * Used storage in bytes.
+    */
+    'used'?: number;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "username",
+            "baseName": "username",
+            "type": "string"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "admin",
+            "baseName": "admin",
+            "type": "boolean"
+        },
+        {
+            "name": "namespace",
+            "baseName": "namespace",
+            "type": "string"
+        },
+        {
+            "name": "locale",
+            "baseName": "locale",
+            "type": "string"
+        },
+        {
+            "name": "auth",
+            "baseName": "auth",
+            "type": "CoreV3User.AuthEnum"
+        },
+        {
+            "name": "has_password",
+            "baseName": "has_password",
+            "type": "boolean"
+        },
+        {
+            "name": "hard_quota",
+            "baseName": "hard_quota",
+            "type": "number"
+        },
+        {
+            "name": "soft_quota",
+            "baseName": "soft_quota",
+            "type": "number"
+        },
+        {
+            "name": "available",
+            "baseName": "available",
+            "type": "number"
+        },
+        {
+            "name": "used",
+            "baseName": "used",
+            "type": "number"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3User.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3User {
+    export enum AuthEnum {
+        Internal = <any> 'internal',
+        External = <any> 'external'
+    }
+}
+/**
+* A list of users.
+*/
+export class CoreV3Users {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<CoreV3User>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<CoreV3User>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Users.attributeTypeMap;
+    }
+}
+
+/**
 * A notification
 */
 export class NotificationV2Notification {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -2081,7 +4199,7 @@ export class NotificationV2Notification {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * Notification locale. A locale contains a static message which is of a given locale.
     */
@@ -2094,16 +4212,21 @@ export class NotificationV2Notification {
     * Message.
     */
     'message'?: string;
-    'sender'?: NotificationV2NotificationSender;
-    'node'?: NotificationV2NotificationNode;
+    'sender'?: NotificationV3NotificationSender;
+    'node'?: NotificationV3NotificationNode;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -2113,7 +4236,7 @@ export class NotificationV2Notification {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "locale",
@@ -2133,12 +4256,12 @@ export class NotificationV2Notification {
         {
             "name": "sender",
             "baseName": "sender",
-            "type": "NotificationV2NotificationSender"
+            "type": "NotificationV3NotificationSender"
         },
         {
             "name": "node",
             "baseName": "node",
-            "type": "NotificationV2NotificationNode"
+            "type": "NotificationV3NotificationNode"
         }    ];
 
     static getAttributeTypeMap() {
@@ -2153,7 +4276,7 @@ export class NotificationV2Notifications {
     /**
     * Holds a list of links rfc1738 to other resources.
     */
-    '_links'?: CoreV2ListLinks;
+    'links'?: CoreV2ListLinks;
     /**
     * The resource type, always List.
     */
@@ -2172,8 +4295,8 @@ export class NotificationV2Notifications {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2ListLinks"
         },
         {
@@ -2203,10 +4326,150 @@ export class NotificationV2Notifications {
 }
 
 /**
+* A notification
+*/
+export class NotificationV3Notification {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Notification locale. A locale contains a static message which is of a given locale.
+    */
+    'locale'?: string;
+    /**
+    * Subject.
+    */
+    'subject'?: string;
+    /**
+    * Message.
+    */
+    'message'?: string;
+    'sender'?: NotificationV3NotificationSender;
+    'node'?: NotificationV3NotificationNode;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "locale",
+            "baseName": "locale",
+            "type": "string"
+        },
+        {
+            "name": "subject",
+            "baseName": "subject",
+            "type": "string"
+        },
+        {
+            "name": "message",
+            "baseName": "message",
+            "type": "string"
+        },
+        {
+            "name": "sender",
+            "baseName": "sender",
+            "type": "NotificationV3NotificationSender"
+        },
+        {
+            "name": "node",
+            "baseName": "node",
+            "type": "NotificationV3NotificationNode"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return NotificationV3Notification.attributeTypeMap;
+    }
+}
+
+/**
+* A list of notifications.
+*/
+export class NotificationV3Notifications {
+    /**
+    * Holds a list of links rfc1738 to other resources.
+    */
+    'links'?: CoreV3ListLinks;
+    /**
+    * The resource type, always List.
+    */
+    'kind'?: string;
+    /**
+    * Holds the number of items in the current list response.
+    */
+    'count'?: number;
+    /**
+    * Holds the number of total available items on the server. Note that a List resource is always paged. You need to traverse with offset and limit to request further resources in the list.
+    */
+    'total'?: number;
+    'data'?: Array<NotificationV3Notification>;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3ListLinks"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "count",
+            "baseName": "count",
+            "type": "number"
+        },
+        {
+            "name": "total",
+            "baseName": "total",
+            "type": "number"
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<NotificationV3Notification>"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return NotificationV3Notifications.attributeTypeMap;
+    }
+}
+
+/**
 * A collection can hold an unlimited number of child nodes.
 */
 export class CoreV2Collection {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -2214,11 +4477,15 @@ export class CoreV2Collection {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was deleted.
+    */
+    'deleted'?: Date;
     /**
     * Node name.
     */
@@ -2249,7 +4516,7 @@ export class CoreV2Collection {
     */
     'access'?: CoreV2Collection.AccessEnum;
     'parent'?: CoreV2NodeParent;
-    'share'?: CoreV2NodeShare;
+    'share'?: CoreV3NodeShare;
     'shareowner'?: CoreV2NodeShareowner;
     /**
     * Is true if the user has an active subscription on this node.
@@ -2260,6 +4527,10 @@ export class CoreV2Collection {
     */
     'subscription_exclude_me'?: boolean;
     /**
+    * Subscription throttle interval in seconds
+    */
+    'subscription_throttle'?: number;
+    /**
     * Is true if the node has a protected public sharelink.
     */
     'sharelink_has_password'?: boolean;
@@ -2268,9 +4539,14 @@ export class CoreV2Collection {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -2280,12 +4556,17 @@ export class CoreV2Collection {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
+        },
+        {
+            "name": "deleted",
+            "baseName": "deleted",
+            "type": "Date"
         },
         {
             "name": "name",
@@ -2335,7 +4616,7 @@ export class CoreV2Collection {
         {
             "name": "share",
             "baseName": "share",
-            "type": "CoreV2NodeShare"
+            "type": "CoreV3NodeShare"
         },
         {
             "name": "shareowner",
@@ -2353,6 +4634,11 @@ export class CoreV2Collection {
             "type": "boolean"
         },
         {
+            "name": "subscription_throttle",
+            "baseName": "subscription_throttle",
+            "type": "number"
+        },
+        {
             "name": "sharelink_has_password",
             "baseName": "sharelink_has_password",
             "type": "boolean"
@@ -2368,14 +4654,18 @@ export namespace CoreV2Collection {
         Rw = <any> 'rw',
         W = <any> 'w',
         M = <any> 'm',
-        WP = <any> 'w+'
+        Rp = <any> 'rp'
     }
 }
 /**
 * A collection can hold an unlimited number of child nodes.
 */
 export class CoreV2File {
-    '_links'?: CoreV2Links;
+    'links'?: CoreV2Links;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
     /**
     * Unique 12-byte resource identifier. Note this is a MongoDB ObjectId. The name is the standard resource identifier, the id only useful to verify that a given resource was completely recreated. An ID is immutable and will be created on the server.
     */
@@ -2383,11 +4673,15 @@ export class CoreV2File {
     /**
     * ISO 8601 timestamp when the resource was created.
     */
-    'created'?: string;
+    'created'?: Date;
     /**
     * ISO 8601 timestamp when the resource was changed.
     */
-    'changed'?: string;
+    'changed'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was deleted.
+    */
+    'deleted'?: Date;
     /**
     * Node name.
     */
@@ -2418,7 +4712,7 @@ export class CoreV2File {
     */
     'access'?: CoreV2File.AccessEnum;
     'parent'?: CoreV2NodeParent;
-    'share'?: CoreV2NodeShare;
+    'share'?: CoreV3NodeShare;
     'shareowner'?: CoreV2NodeShareowner;
     /**
     * Is true if the user has an active subscription on this node.
@@ -2428,6 +4722,10 @@ export class CoreV2File {
     * Subscription excludes actions from the subscribed user itself.
     */
     'subscription_exclude_me'?: boolean;
+    /**
+    * Subscription throttle interval in seconds
+    */
+    'subscription_throttle'?: number;
     /**
     * Is true if the node has a protected public sharelink.
     */
@@ -2449,9 +4747,14 @@ export class CoreV2File {
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "_links",
-            "baseName": "_links",
+            "name": "links",
+            "baseName": "links",
             "type": "CoreV2Links"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
         },
         {
             "name": "id",
@@ -2461,12 +4764,17 @@ export class CoreV2File {
         {
             "name": "created",
             "baseName": "created",
-            "type": "string"
+            "type": "Date"
         },
         {
             "name": "changed",
             "baseName": "changed",
-            "type": "string"
+            "type": "Date"
+        },
+        {
+            "name": "deleted",
+            "baseName": "deleted",
+            "type": "Date"
         },
         {
             "name": "name",
@@ -2516,12 +4824,382 @@ export class CoreV2File {
         {
             "name": "share",
             "baseName": "share",
-            "type": "CoreV2NodeShare"
+            "type": "CoreV3NodeShare"
         },
         {
             "name": "shareowner",
             "baseName": "shareowner",
             "type": "CoreV2NodeShareowner"
+        },
+        {
+            "name": "subscription",
+            "baseName": "subscription",
+            "type": "boolean"
+        },
+        {
+            "name": "subscription_exclude_me",
+            "baseName": "subscription_exclude_me",
+            "type": "boolean"
+        },
+        {
+            "name": "subscription_throttle",
+            "baseName": "subscription_throttle",
+            "type": "number"
+        },
+        {
+            "name": "sharelink_has_password",
+            "baseName": "sharelink_has_password",
+            "type": "boolean"
+        },
+        {
+            "name": "version",
+            "baseName": "version",
+            "type": "number"
+        },
+        {
+            "name": "hash",
+            "baseName": "hash",
+            "type": "string"
+        },
+        {
+            "name": "preview",
+            "baseName": "preview",
+            "type": "boolean"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV2File.attributeTypeMap;
+    }
+}
+
+export namespace CoreV2File {
+    export enum AccessEnum {
+        Rw = <any> 'rw',
+        W = <any> 'w',
+        M = <any> 'm',
+        Rp = <any> 'rp'
+    }
+}
+/**
+* A collection can hold an unlimited number of child nodes.
+*/
+export class CoreV3Collection {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Node name.
+    */
+    'name'?: string;
+    /**
+    * Mimetype.
+    */
+    'mime'?: string;
+    /**
+    * Readonly only affects the content of the node but not metadata.
+    */
+    'readonly'?: boolean;
+    /**
+    * If node is of type Collection this flag is true.
+    */
+    'directory'?: boolean;
+    /**
+    * The size in bytes. If the node is of type collection the size is the number of child nodes.
+    */
+    'size'?: number;
+    /**
+    * The path abstraction of the node.
+    */
+    'path'?: string;
+    /**
+    * Access level.
+    */
+    'access'?: CoreV3Collection.AccessEnum;
+    'share'?: CoreV3NodeShare;
+    'owner'?: CoreV3NodeOwner;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'created'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'changed'?: Date;
+    /**
+    * Is true if the user has an active subscription on this node.
+    */
+    'subscription'?: boolean;
+    /**
+    * Subscription excludes actions from the subscribed user itself.
+    */
+    'subscription_exclude_me'?: boolean;
+    /**
+    * Is true if the node has a protected public sharelink.
+    */
+    'sharelink_has_password'?: boolean;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "mime",
+            "baseName": "mime",
+            "type": "string"
+        },
+        {
+            "name": "readonly",
+            "baseName": "readonly",
+            "type": "boolean"
+        },
+        {
+            "name": "directory",
+            "baseName": "directory",
+            "type": "boolean"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
+        },
+        {
+            "name": "path",
+            "baseName": "path",
+            "type": "string"
+        },
+        {
+            "name": "access",
+            "baseName": "access",
+            "type": "CoreV3Collection.AccessEnum"
+        },
+        {
+            "name": "share",
+            "baseName": "share",
+            "type": "CoreV3NodeShare"
+        },
+        {
+            "name": "owner",
+            "baseName": "owner",
+            "type": "CoreV3NodeOwner"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "changed",
+            "baseName": "changed",
+            "type": "Date"
+        },
+        {
+            "name": "subscription",
+            "baseName": "subscription",
+            "type": "boolean"
+        },
+        {
+            "name": "subscription_exclude_me",
+            "baseName": "subscription_exclude_me",
+            "type": "boolean"
+        },
+        {
+            "name": "sharelink_has_password",
+            "baseName": "sharelink_has_password",
+            "type": "boolean"
+        }    ];
+
+    static getAttributeTypeMap() {
+        return CoreV3Collection.attributeTypeMap;
+    }
+}
+
+export namespace CoreV3Collection {
+    export enum AccessEnum {
+        Rw = <any> 'rw',
+        W = <any> 'w',
+        M = <any> 'm',
+        Rp = <any> 'rp'
+    }
+}
+/**
+* A collection can hold an unlimited number of child nodes.
+*/
+export class CoreV3File {
+    'links'?: CoreV3Links;
+    'embedded'?: CoreV3EmbeddedResources;
+    /**
+    * Resource type
+    */
+    'kind'?: string;
+    'metadata'?: CoreV3Metadata;
+    /**
+    * Node name.
+    */
+    'name'?: string;
+    /**
+    * Mimetype.
+    */
+    'mime'?: string;
+    /**
+    * Readonly only affects the content of the node but not metadata.
+    */
+    'readonly'?: boolean;
+    /**
+    * If node is of type Collection this flag is true.
+    */
+    'directory'?: boolean;
+    /**
+    * The size in bytes. If the node is of type collection the size is the number of child nodes.
+    */
+    'size'?: number;
+    /**
+    * The path abstraction of the node.
+    */
+    'path'?: string;
+    /**
+    * Access level.
+    */
+    'access'?: CoreV3File.AccessEnum;
+    'share'?: CoreV3NodeShare;
+    'owner'?: CoreV3NodeOwner;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'created'?: Date;
+    /**
+    * ISO 8601 timestamp when the resource was created.
+    */
+    'changed'?: Date;
+    /**
+    * Is true if the user has an active subscription on this node.
+    */
+    'subscription'?: boolean;
+    /**
+    * Subscription excludes actions from the subscribed user itself.
+    */
+    'subscription_exclude_me'?: boolean;
+    /**
+    * Is true if the node has a protected public sharelink.
+    */
+    'sharelink_has_password'?: boolean;
+    /**
+    * The content version. Does increase if the content gets changed.
+    */
+    'version'?: number;
+    /**
+    * MD5 content checksum.
+    */
+    'hash'?: string;
+    /**
+    * Is true if there is a preview
+    */
+    'preview'?: boolean;
+
+    static discriminator: string | undefined = undefined;
+
+    static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "links",
+            "baseName": "links",
+            "type": "CoreV3Links"
+        },
+        {
+            "name": "embedded",
+            "baseName": "embedded",
+            "type": "CoreV3EmbeddedResources"
+        },
+        {
+            "name": "kind",
+            "baseName": "kind",
+            "type": "string"
+        },
+        {
+            "name": "metadata",
+            "baseName": "metadata",
+            "type": "CoreV3Metadata"
+        },
+        {
+            "name": "name",
+            "baseName": "name",
+            "type": "string"
+        },
+        {
+            "name": "mime",
+            "baseName": "mime",
+            "type": "string"
+        },
+        {
+            "name": "readonly",
+            "baseName": "readonly",
+            "type": "boolean"
+        },
+        {
+            "name": "directory",
+            "baseName": "directory",
+            "type": "boolean"
+        },
+        {
+            "name": "size",
+            "baseName": "size",
+            "type": "number"
+        },
+        {
+            "name": "path",
+            "baseName": "path",
+            "type": "string"
+        },
+        {
+            "name": "access",
+            "baseName": "access",
+            "type": "CoreV3File.AccessEnum"
+        },
+        {
+            "name": "share",
+            "baseName": "share",
+            "type": "CoreV3NodeShare"
+        },
+        {
+            "name": "owner",
+            "baseName": "owner",
+            "type": "CoreV3NodeOwner"
+        },
+        {
+            "name": "created",
+            "baseName": "created",
+            "type": "Date"
+        },
+        {
+            "name": "changed",
+            "baseName": "changed",
+            "type": "Date"
         },
         {
             "name": "subscription",
@@ -2555,16 +5233,16 @@ export class CoreV2File {
         }    ];
 
     static getAttributeTypeMap() {
-        return CoreV2File.attributeTypeMap;
+        return CoreV3File.attributeTypeMap;
     }
 }
 
-export namespace CoreV2File {
+export namespace CoreV3File {
     export enum AccessEnum {
         Rw = <any> 'rw',
         W = <any> 'w',
         M = <any> 'm',
-        WP = <any> 'w+'
+        Rp = <any> 'rp'
     }
 }
 
@@ -2572,44 +5250,74 @@ let enumsMap: {[index: string]: any} = {
         "CoreV2AclRule.TypeEnum": CoreV2AclRule.TypeEnum,
         "CoreV2AclRule.PrivilegeEnum": CoreV2AclRule.PrivilegeEnum,
         "CoreV2EventLog.OperationEnum": CoreV2EventLog.OperationEnum,
+        "CoreV3AccessRuleDefinition.VerbsEnum": CoreV3AccessRuleDefinition.VerbsEnum,
+        "CoreV3AclRule.TypeEnum": CoreV3AclRule.TypeEnum,
+        "CoreV3AclRule.PrivilegeEnum": CoreV3AclRule.PrivilegeEnum,
+        "CoreV3Event.OperationEnum": CoreV3Event.OperationEnum,
         "CoreV2Node.AccessEnum": CoreV2Node.AccessEnum,
         "CoreV2User.AuthEnum": CoreV2User.AuthEnum,
+        "CoreV3Node.AccessEnum": CoreV3Node.AccessEnum,
+        "CoreV3User.AuthEnum": CoreV3User.AuthEnum,
         "CoreV2Collection.AccessEnum": CoreV2Collection.AccessEnum,
         "CoreV2File.AccessEnum": CoreV2File.AccessEnum,
+        "CoreV3Collection.AccessEnum": CoreV3Collection.AccessEnum,
+        "CoreV3File.AccessEnum": CoreV3File.AccessEnum,
 }
 
 let typeMap: {[index: string]: any} = {
-    "ConvertV2SlaveMaster": ConvertV2SlaveMaster,
-    "ConvertV2SlaveSlave": ConvertV2SlaveSlave,
+    "ConvertV3SlaveMaster": ConvertV3SlaveMaster,
+    "ConvertV3SlaveSlave": ConvertV3SlaveSlave,
     "CoreV2AclRule": CoreV2AclRule,
-    "CoreV2AclRuleRole": CoreV2AclRuleRole,
     "CoreV2ApiRoot": CoreV2ApiRoot,
     "CoreV2ChunkSession": CoreV2ChunkSession,
     "CoreV2Delta": CoreV2Delta,
+    "CoreV2Error": CoreV2Error,
     "CoreV2EventLog": CoreV2EventLog,
-    "CoreV2EventLogClient": CoreV2EventLogClient,
-    "CoreV2EventLogNode": CoreV2EventLogNode,
-    "CoreV2EventLogParent": CoreV2EventLogParent,
     "CoreV2FileHistory": CoreV2FileHistory,
-    "CoreV2FileHistoryUser": CoreV2FileHistoryUser,
-    "CoreV2JsonPatch": CoreV2JsonPatch,
     "CoreV2Link": CoreV2Link,
     "CoreV2Links": CoreV2Links,
     "CoreV2ListLinks": CoreV2ListLinks,
     "CoreV2NodeMeta": CoreV2NodeMeta,
     "CoreV2NodeParent": CoreV2NodeParent,
-    "CoreV2NodeShare": CoreV2NodeShare,
     "CoreV2NodeShareowner": CoreV2NodeShareowner,
+    "CoreV2OAuth2Token": CoreV2OAuth2Token,
     "CoreV2Resource": CoreV2Resource,
     "CoreV2ResourceList": CoreV2ResourceList,
     "CoreV2Share": CoreV2Share,
     "CoreV2UserNodeAttributeSummary": CoreV2UserNodeAttributeSummary,
+    "CoreV3AccessRuleDefinition": CoreV3AccessRuleDefinition,
+    "CoreV3AclRule": CoreV3AclRule,
+    "CoreV3AclRuleRole": CoreV3AclRuleRole,
+    "CoreV3ApiRoot": CoreV3ApiRoot,
+    "CoreV3EmbeddedResources": CoreV3EmbeddedResources,
+    "CoreV3Error": CoreV3Error,
+    "CoreV3Event": CoreV3Event,
+    "CoreV3EventClient": CoreV3EventClient,
+    "CoreV3EventNode": CoreV3EventNode,
+    "CoreV3EventParent": CoreV3EventParent,
+    "CoreV3FileHistory": CoreV3FileHistory,
+    "CoreV3FileHistoryUser": CoreV3FileHistoryUser,
+    "CoreV3Link": CoreV3Link,
+    "CoreV3Links": CoreV3Links,
+    "CoreV3ListLinks": CoreV3ListLinks,
+    "CoreV3Metadata": CoreV3Metadata,
+    "CoreV3NodeOwner": CoreV3NodeOwner,
+    "CoreV3NodeShare": CoreV3NodeShare,
+    "CoreV3ProcessStatus": CoreV3ProcessStatus,
+    "CoreV3Resource": CoreV3Resource,
+    "CoreV3ResourceList": CoreV3ResourceList,
+    "CoreV3Share": CoreV3Share,
+    "JsonPatch": JsonPatch,
+    "JsonPatchOperation": JsonPatchOperation,
     "NotificationV2Mail": NotificationV2Mail,
-    "NotificationV2NotificationNode": NotificationV2NotificationNode,
-    "NotificationV2NotificationSender": NotificationV2NotificationSender,
-    "OfficeV2WopiDocument": OfficeV2WopiDocument,
+    "NotificationV3Mail": NotificationV3Mail,
+    "NotificationV3NotificationNode": NotificationV3NotificationNode,
+    "NotificationV3NotificationSender": NotificationV3NotificationSender,
+    "WopiV2Token": WopiV2Token,
     "ConvertV2Slave": ConvertV2Slave,
     "ConvertV2Slaves": ConvertV2Slaves,
+    "ConvertV3Slave": ConvertV3Slave,
+    "ConvertV3Slaves": ConvertV3Slaves,
     "CoreV2Collections": CoreV2Collections,
     "CoreV2EventLogs": CoreV2EventLogs,
     "CoreV2Files": CoreV2Files,
@@ -2619,10 +5327,31 @@ let typeMap: {[index: string]: any} = {
     "CoreV2Nodes": CoreV2Nodes,
     "CoreV2User": CoreV2User,
     "CoreV2Users": CoreV2Users,
+    "CoreV3AccessRole": CoreV3AccessRole,
+    "CoreV3AccessRoles": CoreV3AccessRoles,
+    "CoreV3AccessRule": CoreV3AccessRule,
+    "CoreV3AccessRules": CoreV3AccessRules,
+    "CoreV3Collections": CoreV3Collections,
+    "CoreV3Events": CoreV3Events,
+    "CoreV3Files": CoreV3Files,
+    "CoreV3Group": CoreV3Group,
+    "CoreV3Groups": CoreV3Groups,
+    "CoreV3Node": CoreV3Node,
+    "CoreV3Nodes": CoreV3Nodes,
+    "CoreV3Process": CoreV3Process,
+    "CoreV3Processes": CoreV3Processes,
+    "CoreV3Session": CoreV3Session,
+    "CoreV3Sessions": CoreV3Sessions,
+    "CoreV3User": CoreV3User,
+    "CoreV3Users": CoreV3Users,
     "NotificationV2Notification": NotificationV2Notification,
     "NotificationV2Notifications": NotificationV2Notifications,
+    "NotificationV3Notification": NotificationV3Notification,
+    "NotificationV3Notifications": NotificationV3Notifications,
     "CoreV2Collection": CoreV2Collection,
     "CoreV2File": CoreV2File,
+    "CoreV3Collection": CoreV3Collection,
+    "CoreV3File": CoreV3File,
 }
 
 export interface Authentication {
@@ -2677,119 +5406,8 @@ export class VoidAuth implements Authentication {
     }
 }
 
-export enum BallonAppElasticsearchV2ApiApiKeys {
-}
-
-export class BallonAppElasticsearchV2Api {
-    protected _basePath = defaultBasePath;
-    protected defaultHeaders : any = {};
-    protected _useQuerystring : boolean = false;
-
-    protected authentications = {
-        'default': <Authentication>new VoidAuth(),
-    }
-
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
-        if (password) {
-            if (basePath) {
-                this.basePath = basePath;
-            }
-        } else {
-            if (basePathOrUsername) {
-                this.basePath = basePathOrUsername
-            }
-        }
-    }
-
-    set useQuerystring(value: boolean) {
-        this._useQuerystring = value;
-    }
-
-    set basePath(basePath: string) {
-        this._basePath = basePath;
-    }
-
-    get basePath() {
-        return this._basePath;
-    }
-
-    public setDefaultAuthentication(auth: Authentication) {
-	this.authentications.default = auth;
-    }
-
-    public setApiKey(key: BallonAppElasticsearchV2ApiApiKeys, value: string) {
-        (this.authentications as any)[BallonAppElasticsearchV2ApiApiKeys[key]].apiKey = value;
-    }
-    /**
-     * 
-     * @summary Extended search query using elasticsearch
-     * @param query Elasticsearch query as JSON
-     * @param deleted Wherever include deleted nodes or not, possible values:  0 Exclude deleted 1 Only deleted 2 Include deleted.
-     */
-    public queryElasticsearch (query: string, deleted?: number) : any {
-        const localVarPath = this.basePath + '/api/v2/nodes/search';
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'query' is not null or undefined
-        if (query === null || query === undefined) {
-            throw new Error('Required parameter query was null or undefined when calling queryElasticsearch.');
-        }
-
-        if (query !== undefined) {
-            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
-        }
-
-        if (deleted !== undefined) {
-            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "CoreV2Nodes";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: CoreV2Nodes;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2Nodes");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-}
 export enum ConvertV2ApiApiKeys {
+    BearerAuth,
 }
 
 export class ConvertV2Api {
@@ -2799,11 +5417,16 @@ export class ConvertV2Api {
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -2833,9 +5456,16 @@ export class ConvertV2Api {
     public setApiKey(key: ConvertV2ApiApiKeys, value: string) {
         (this.authentications as any)[ConvertV2ApiApiKeys[key]].apiKey = value;
     }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
     /**
      * 
-     * @summary Add new convert slave
+     * @summary Add convert slave
      * @param file File identifier
      * @param body Add new conversion slave 
      */
@@ -2901,11 +5531,11 @@ export class ConvertV2Api {
     }
     /**
      * 
-     * @summary Delete slave
+     * @summary Delete convert slave
      * @param file File identifier
      * @param slave Slave identifier
      */
-    public deleteSlave (file: string, slave: string) : any {
+    public deleteCoreV2Slave (file: string, slave: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/convert/slaves/{slave}'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)))
             .replace('{' + 'slave' + '}', encodeURIComponent(String(slave)));
@@ -2915,12 +5545,12 @@ export class ConvertV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling deleteSlave.');
+            throw new Error('Required parameter file was null or undefined when calling deleteCoreV2Slave.');
         }
 
         // verify required parameter 'slave' is not null or undefined
         if (slave === null || slave === undefined) {
-            throw new Error('Required parameter slave was null or undefined when calling deleteSlave.');
+            throw new Error('Required parameter slave was null or undefined when calling deleteCoreV2Slave.');
         }
 
 
@@ -2966,11 +5596,11 @@ export class ConvertV2Api {
     }
     /**
      * 
-     * @summary Get single slave
+     * @summary Get convert slave
      * @param file File identifier
      * @param slave Slave identifier
      */
-    public getSlave (file: string, slave: string) : any {
+    public getCoreV2Slave (file: string, slave: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/convert/slaves/{slave}'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)))
             .replace('{' + 'slave' + '}', encodeURIComponent(String(slave)));
@@ -2980,12 +5610,12 @@ export class ConvertV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling getSlave.');
+            throw new Error('Required parameter file was null or undefined when calling getCoreV2Slave.');
         }
 
         // verify required parameter 'slave' is not null or undefined
         if (slave === null || slave === undefined) {
-            throw new Error('Required parameter slave was null or undefined when calling getSlave.');
+            throw new Error('Required parameter slave was null or undefined when calling getCoreV2Slave.');
         }
 
 
@@ -3032,10 +5662,10 @@ export class ConvertV2Api {
     }
     /**
      * 
-     * @summary Get existing convert slaves
+     * @summary Get convert slaves
      * @param file File identifier
      */
-    public getSlaves (file: string) : any {
+    public getCoreV2Slaves (file: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/convert/slaves'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
@@ -3044,7 +5674,7 @@ export class ConvertV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling getSlaves.');
+            throw new Error('Required parameter file was null or undefined when calling getCoreV2Slaves.');
         }
 
 
@@ -3090,11 +5720,11 @@ export class ConvertV2Api {
         });
     }
     /**
-     * 
-     * @summary Get supported file formats to convert to (formats do vary between files)
+     * Get supported file formats to convert to (formats do vary between files)
+     * @summary Get supported convert file formats
      * @param file File identifier
      */
-    public getSupportedFormats (file: string) : any {
+    public getCoreV2SupportedFormats (file: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/convert/supported-formats'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
@@ -3103,7 +5733,380 @@ export class ConvertV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling getSupportedFormats.');
+            throw new Error('Required parameter file was null or undefined when calling getCoreV2SupportedFormats.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "Array<string>";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: Array<string>;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "Array<string>");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum ConvertV3ApiApiKeys {
+    BearerAuth,
+}
+
+export class ConvertV3Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: ConvertV3ApiApiKeys, value: string) {
+        (this.authentications as any)[ConvertV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Add convert slave
+     * @param file File identifier
+     * @param body Add new conversion slave 
+     */
+    public addCoreV3Slave (file: string, body: ConvertV3Slave) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/convert/slaves'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling addCoreV3Slave.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addCoreV3Slave.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "ConvertV3Slave")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "ConvertV3Slave";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: ConvertV3Slave;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "ConvertV3Slave");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete convert slave
+     * @param file File identifier
+     * @param slave Slave identifier
+     */
+    public deleteCoreV3Slave (file: string, slave: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/convert/slaves/{slave}'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)))
+            .replace('{' + 'slave' + '}', encodeURIComponent(String(slave)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling deleteCoreV3Slave.');
+        }
+
+        // verify required parameter 'slave' is not null or undefined
+        if (slave === null || slave === undefined) {
+            throw new Error('Required parameter slave was null or undefined when calling deleteCoreV3Slave.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get convert slave
+     * @param file File identifier
+     * @param slave Slave identifier
+     */
+    public getCoreV3Slave (file: string, slave: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/convert/slaves/{slave}'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)))
+            .replace('{' + 'slave' + '}', encodeURIComponent(String(slave)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3Slave.');
+        }
+
+        // verify required parameter 'slave' is not null or undefined
+        if (slave === null || slave === undefined) {
+            throw new Error('Required parameter slave was null or undefined when calling getCoreV3Slave.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "ConvertV3Slave";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: ConvertV3Slave;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "ConvertV3Slave");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get convert slaves
+     * @param file File identifier
+     */
+    public getCoreV3Slaves (file: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/convert/slaves'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3Slaves.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "ConvertV3Slaves";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: ConvertV3Slaves;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "ConvertV3Slaves");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get supported file formats to convert to (formats do vary between files)
+     * @summary Get supported convert file formats
+     * @param file File identifier
+     */
+    public getCoreV3SupportedFormats (file: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/convert/supported-formats'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3SupportedFormats.');
         }
 
 
@@ -3150,6 +6153,7 @@ export class ConvertV2Api {
     }
 }
 export enum CoreV2ApiApiKeys {
+    BearerAuth,
 }
 
 export class CoreV2Api {
@@ -3159,11 +6163,16 @@ export class CoreV2Api {
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -3193,9 +6202,223 @@ export class CoreV2Api {
     public setApiKey(key: CoreV2ApiApiKeys, value: string) {
         (this.authentications as any)[CoreV2ApiApiKeys[key]].apiKey = value;
     }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
     /**
      * 
-     * @summary Add new group
+     * @summary Create collection
+     * @param collection Parent collection
+     * @param body 
+     */
+    public addCoreV2Collection (collection: string, body: CoreV2Collection) : any {
+        const localVarPath = this.basePath + '/api/v2/collections/{collection}'
+            .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'collection' is not null or undefined
+        if (collection === null || collection === undefined) {
+            throw new Error('Required parameter collection was null or undefined when calling addCoreV2Collection.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addCoreV2Collection.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "CoreV2Collection")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2Collection";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Collection;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2Collection");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Create a new collection in root
+     * @param body 
+     */
+    public addCoreV2RootCollection (body: CoreV2Collection) : any {
+        const localVarPath = this.basePath + '/api/v2/collections';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addCoreV2RootCollection.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "CoreV2Collection")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2Collection";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Collection;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2Collection");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get OAUTH2 Bearer token
+     * @param grant_type OAUTH2 grant_type
+     * @param username Username
+     * @param password Password
+     * @param code Multi factor value. This is usually some kind of a code.
+     * @param refresh_token OAUTH2 refresh_token to retrieve a new access_token.
+     */
+    public addCoreV2Token (grant_type: 'password' | 'password_mfa' | 'refresh_token', username?: string, password?: string, code?: string, refresh_token?: string) : any {
+        const localVarPath = this.basePath + '/api/v2/tokens';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'grant_type' is not null or undefined
+        if (grant_type === null || grant_type === undefined) {
+            throw new Error('Required parameter grant_type was null or undefined when calling addCoreV2Token.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        if (grant_type !== undefined) {
+            localVarFormParams['grant_type'] = ObjectSerializer.serialize(grant_type, "'password' | 'password_mfa' | 'refresh_token'");
+        }
+
+        if (username !== undefined) {
+            localVarFormParams['username'] = ObjectSerializer.serialize(username, "string");
+        }
+
+        if (password !== undefined) {
+            localVarFormParams['password'] = ObjectSerializer.serialize(password, "string");
+        }
+
+        if (code !== undefined) {
+            localVarFormParams['code'] = ObjectSerializer.serialize(code, "string");
+        }
+
+        if (refresh_token !== undefined) {
+            localVarFormParams['refresh_token'] = ObjectSerializer.serialize(refresh_token, "string");
+        }
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2OAuth2Token";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2OAuth2Token;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2OAuth2Token");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Add group
      * @param data 
      */
     public addGroup (data?: CoreV2Group) : any {
@@ -3249,7 +6472,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Add new user
+     * @summary Add user
      * @param data 
      */
     public addUser (data?: CoreV2User) : any {
@@ -3303,10 +6526,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Clone existing node
+     * @summary Clone node
      * @param node Node identifier
      * @param destid Destination collection, if this is null root is taken
-     * @param conflict Conflict resolution
+     * @param conflict core.v2.Conflict resolution
      */
     public cloneNode (node: string, destid?: string, conflict?: number) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/clone'
@@ -3372,143 +6595,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Create a new collection
-     * @param collection Parent collection
-     * @param body 
-     */
-    public createCollection (collection: string, body: CoreV2Collection) : any {
-        const localVarPath = this.basePath + '/api/v2/collections/{collection}'
-            .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'collection' is not null or undefined
-        if (collection === null || collection === undefined) {
-            throw new Error('Required parameter collection was null or undefined when calling createCollection.');
-        }
-
-        // verify required parameter 'body' is not null or undefined
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createCollection.');
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-            body: ObjectSerializer.serialize(body, "CoreV2Collection")
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "CoreV2Collection";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: CoreV2Collection;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2Collection");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
-     * @summary Create a new collection in root
-     * @param collection Parent collection
-     * @param body 
-     */
-    public createRootCollection (collection: string, body: CoreV2Collection) : any {
-        const localVarPath = this.basePath + '/api/v2/collections'
-            .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'collection' is not null or undefined
-        if (collection === null || collection === undefined) {
-            throw new Error('Required parameter collection was null or undefined when calling createRootCollection.');
-        }
-
-        // verify required parameter 'body' is not null or undefined
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createRootCollection.');
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-            body: ObjectSerializer.serialize(body, "CoreV2Collection")
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "CoreV2Collection";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: CoreV2Collection;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2Collection");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
      * @summary Delete group
      * @param group Resource identifier
-     * @param force Per default the group gets disabled, if force is set the group gets removed completely.
      */
-    public deleteGroup (group: string, force?: boolean) : any {
+    public deleteCoreV2Group (group: string) : any {
         const localVarPath = this.basePath + '/api/v2/groups/{group}'
             .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
         let localVarQueryParameters: any = {};
@@ -3517,11 +6607,7 @@ export class CoreV2Api {
 
         // verify required parameter 'group' is not null or undefined
         if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling deleteGroup.');
-        }
-
-        if (force !== undefined) {
-            localVarQueryParameters['force'] = ObjectSerializer.serialize(force, "boolean");
+            throw new Error('Required parameter group was null or undefined when calling deleteCoreV2Group.');
         }
 
 
@@ -3573,7 +6659,7 @@ export class CoreV2Api {
      * @param ignore_flag If both ignore_flag and force_flag were set, the node will be deleted completely 
      * @param at Has to be a valid unix timestamp if so the node will destroy itself at this specified time instead immediatly
      */
-    public deleteNode (node: string, force?: boolean, ignore_flag?: boolean, at?: number) : any {
+    public deleteCoreV2Node (node: string, force?: boolean, ignore_flag?: boolean, at?: number) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -3582,7 +6668,7 @@ export class CoreV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling deleteNode.');
+            throw new Error('Required parameter node was null or undefined when calling deleteCoreV2Node.');
         }
 
         if (force !== undefined) {
@@ -3639,11 +6725,11 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Does only remove sharing options and transform a share back into a normal collection. There will not be any data loss after this action. All existing references would be removed automatically.
+     * Does only remove sharing options and transform a share back into a normal collection. There will not be any data loss after this action. All existing references would be removed automatically.
+     * @summary Delete share
      * @param collection Collection identifier
      */
-    public deleteShare (collection: string) : any {
+    public deleteCoreV2Share (collection: string) : any {
         const localVarPath = this.basePath + '/api/v2/collections/{collection}/share'
             .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
         let localVarQueryParameters: any = {};
@@ -3652,7 +6738,7 @@ export class CoreV2Api {
 
         // verify required parameter 'collection' is not null or undefined
         if (collection === null || collection === undefined) {
-            throw new Error('Required parameter collection was null or undefined when calling deleteShare.');
+            throw new Error('Required parameter collection was null or undefined when calling deleteCoreV2Share.');
         }
 
 
@@ -3702,7 +6788,7 @@ export class CoreV2Api {
      * @param user Resource identifier
      * @param force Per default the user gets disabled, if force is set the user gets removed completely.
      */
-    public deleteUser (user: string, force?: boolean) : any {
+    public deleteCoreV2User (user: string, force?: boolean) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -3711,7 +6797,7 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling deleteUser.');
+            throw new Error('Required parameter user was null or undefined when calling deleteCoreV2User.');
         }
 
         if (force !== undefined) {
@@ -3763,7 +6849,7 @@ export class CoreV2Api {
      * 
      * @summary Get server status
      */
-    public getApi () : any {
+    public getCoreV2Api () : any {
         const localVarPath = this.basePath + '/api';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -3813,7 +6899,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get all children of a collection
+     * @summary Get collection children
      * @param collection Parent collection
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param deleted Wheter to include deleted or not
@@ -3823,7 +6909,7 @@ export class CoreV2Api {
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      * @param recursive Include children recursively.
      */
-    public getChildren (collection: string, query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
+    public getCoreV2Children (collection: string, query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
         const localVarPath = this.basePath + '/api/v2/collections/{collection}/children'
             .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
         let localVarQueryParameters: any = {};
@@ -3832,7 +6918,7 @@ export class CoreV2Api {
 
         // verify required parameter 'collection' is not null or undefined
         if (collection === null || collection === undefined) {
-            throw new Error('Required parameter collection was null or undefined when calling getChildren.');
+            throw new Error('Required parameter collection was null or undefined when calling getCoreV2Children.');
         }
 
         if (query !== undefined) {
@@ -3907,7 +6993,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get all collections
+     * @summary Get collections
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param deleted Wheter to include deleted or not
      * @param attributes Filter attributes
@@ -3915,7 +7001,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getCollections (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2Collections (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/collections';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -3988,14 +7074,14 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Download node contents. Note that collections are zipped on-the-fly.
+     * Stream node contents. Note that collections are zipped on-the-fly.
+     * @summary Download node content.
      * @param node Node identifier
-     * @param Byte_Ranges Read stream from a specific offset/limit in bytes 
+     * @param Range Read stream from a specific offset/limit in bytes.
      * @param encode Can be set to base64 to encode content as base64.
      * @param download Force download file (Content-Disposition: attachment HTTP header)
      */
-    public getContent (node: string, Byte_Ranges?: number, encode?: 'base64', download?: boolean) : any {
+    public getCoreV2Content (node: string, Range?: string, encode?: 'base64', download?: boolean) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/content'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -4004,7 +7090,7 @@ export class CoreV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling getContent.');
+            throw new Error('Required parameter node was null or undefined when calling getCoreV2Content.');
         }
 
         if (encode !== undefined) {
@@ -4015,7 +7101,7 @@ export class CoreV2Api {
             localVarQueryParameters['download'] = ObjectSerializer.serialize(download, "boolean");
         }
 
-        localVarHeaderParams['Byte-Ranges'] = ObjectSerializer.serialize(Byte_Ranges, "number");
+        localVarHeaderParams['Range'] = ObjectSerializer.serialize(Range, "string");
 
         let localVarUseFormData = false;
 
@@ -4025,7 +7111,7 @@ export class CoreV2Api {
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            encoding: null,
+            json: true,
         };
 
         this.authentications.default.applyToRequest(localVarRequestOptions);
@@ -4038,17 +7124,17 @@ export class CoreV2Api {
             }
         }
 
-        var returnType = "Buffer";
+        var returnType = "string";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body: string;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    body = ObjectSerializer.deserialize(body, "string");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -4060,10 +7146,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get user object of the current authenticated user
+     * @summary Get current user
      * @param attributes Filter attributes
      */
-    public getCurrentUser (attributes?: Array<string>) : any {
+    public getCoreV2CurrentUser (attributes?: Array<string>) : any {
         const localVarPath = this.basePath + '/api/v2/users/whoami';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4116,15 +7202,15 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Return delete nodes (Excluding sub nodes of deleted collections)
+     * Return deleted nodes (Excluding sub nodes of deleted collections)
+     * @summary Get deleted nodes
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
      * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getDeletedNodes (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2DeletedNodes (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/trash';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4199,7 +7285,7 @@ export class CoreV2Api {
      * @param attributes Filter attributes, per default not all attributes would be returned
      * @param cursor Set a cursor to rquest next nodes within delta processing 
      */
-    public getDelta (limit?: number, attributes?: Array<string>, cursor?: string) : any {
+    public getCoreV2Delta (limit?: number, attributes?: Array<string>, cursor?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/delta';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4260,15 +7346,15 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Get event log containing all operations which are made by the user himself or share members
+     * Get event log containing all operations which are made by the user himself or share members
+     * @summary Get events
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
      * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getEventLog (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2EventLog (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/event-log';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4338,10 +7424,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get a full change history of a file
+     * @summary Get file history
      * @param file File identifier
      */
-    public getFileHistory (file: string) : any {
+    public getCoreV2FileHistory (file: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/history'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
@@ -4350,7 +7436,7 @@ export class CoreV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling getFileHistory.');
+            throw new Error('Required parameter file was null or undefined when calling getCoreV2FileHistory.');
         }
 
 
@@ -4397,7 +7483,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get all files
+     * @summary Get files
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param deleted Wheter to include deleted or not
      * @param attributes Filter attributes
@@ -4405,7 +7491,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getFiles (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2Files (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/files';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4479,11 +7565,11 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get single group
+     * @summary Get group
      * @param group Resource identifier
      * @param attributes Filter attributes
      */
-    public getGroup (group: string, attributes?: Array<string>) : any {
+    public getCoreV2Group (group: string, attributes?: Array<string>) : any {
         const localVarPath = this.basePath + '/api/v2/groups/{group}'
             .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
         let localVarQueryParameters: any = {};
@@ -4492,7 +7578,7 @@ export class CoreV2Api {
 
         // verify required parameter 'group' is not null or undefined
         if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling getGroup.');
+            throw new Error('Required parameter group was null or undefined when calling getCoreV2Group.');
         }
 
         if (attributes !== undefined) {
@@ -4543,10 +7629,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Request all member of a group
+     * @summary Get group members
      * @param group Resource identifier
      */
-    public getGroupMembers (group: string) : any {
+    public getCoreV2GroupMembers (group: string) : any {
         const localVarPath = this.basePath + '/api/v2/groups/{group}/members'
             .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
         let localVarQueryParameters: any = {};
@@ -4555,7 +7641,7 @@ export class CoreV2Api {
 
         // verify required parameter 'group' is not null or undefined
         if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling getGroupMembers.');
+            throw new Error('Required parameter group was null or undefined when calling getCoreV2GroupMembers.');
         }
 
 
@@ -4580,17 +7666,17 @@ export class CoreV2Api {
             }
         }
 
-        var returnType = "Array<CoreV2User>";
+        var returnType = "CoreV2Users";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: Array<CoreV2User>;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Users;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "Array<CoreV2User>");
+                    body = ObjectSerializer.deserialize(body, "CoreV2Users");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -4609,7 +7695,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getGroups (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2Groups (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/groups';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4678,10 +7764,10 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Use this method to request the latest cursor if you only need to now if there are changes on the server. This method will not return any other data than the newest cursor. To request a feed with all deltas request /delta.
+     * Use this method to request the latest cursor if you only need to now if there are changes on the server. This method will not return any other data than the newest cursor. To request a feed with all deltas request /delta.
+     * @summary Get last cursor
      */
-    public getLastCursor () : any {
+    public getCoreV2LastCursor () : any {
         const localVarPath = this.basePath + '/api/v2/nodes/last-cursor';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -4731,11 +7817,11 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get single node
+     * @summary Get node
      * @param node Node identifier
      * @param attributes Filter attributes
      */
-    public getNode (node: string, attributes?: Array<string>) : any {
+    public getCoreV2Node (node: string, attributes?: Array<string>) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -4744,7 +7830,7 @@ export class CoreV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling getNode.');
+            throw new Error('Required parameter node was null or undefined when calling getCoreV2Node.');
         }
 
         if (attributes !== undefined) {
@@ -4795,10 +7881,10 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get summary of node usage.
+     * @summary Get user node summary.
      * @param user Resource identifier
      */
-    public getNodeAttributeSummary (user: string) : any {
+    public getCoreV2NodeAttributeSummary (user: string) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}/node-attribute-summary'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -4807,7 +7893,7 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling getNodeAttributeSummary.');
+            throw new Error('Required parameter user was null or undefined when calling getCoreV2NodeAttributeSummary.');
         }
 
 
@@ -4853,8 +7939,8 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Get event log containing all operations which are made by the user himself or share members on a given node
+     * Get event log containing all operations which are made by the user himself or share members on a given node
+     * @summary Get event
      * @param node Node identifier
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
@@ -4862,7 +7948,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getNodeEventLog (node: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2NodeEventLog (node: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/event-log'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -4871,7 +7957,7 @@ export class CoreV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling getNodeEventLog.');
+            throw new Error('Required parameter node was null or undefined when calling getCoreV2NodeEventLog.');
         }
 
         if (query !== undefined) {
@@ -4946,7 +8032,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getNodes (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2Nodes (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -5019,13 +8105,13 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary The hirarchy of all parent nodes is ordered in a single level array beginning with the collection on the highest level.
+     * The hirarchy of all parent nodes is ordered in a single level array beginning with the collection on the highest level.
+     * @summary Get parent collections
      * @param node Node identifier
      * @param attributes Filter attributes
      * @param self Include requested collection itself at the end of the list (Will be ignored if the requested node is a file)
      */
-    public getParentNodes (node: string, attributes?: Array<string>, self?: boolean) : any {
+    public getCoreV2ParentNodes (node: string, attributes?: Array<string>, self?: boolean) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/parents'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -5034,7 +8120,7 @@ export class CoreV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling getParentNodes.');
+            throw new Error('Required parameter node was null or undefined when calling getCoreV2ParentNodes.');
         }
 
         if (attributes !== undefined) {
@@ -5089,7 +8175,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get all children of the root collection
+     * @summary Get root children
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param deleted Wheter to include deleted or not
      * @param attributes Filter attributes
@@ -5098,7 +8184,7 @@ export class CoreV2Api {
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      * @param recursive Include children recursively.
      */
-    public getRootChildren (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
+    public getCoreV2RootChildren (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
         const localVarPath = this.basePath + '/api/v2/collections/children';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -5179,7 +8265,7 @@ export class CoreV2Api {
      * @summary Get share acl and share name
      * @param collection Collection identifier
      */
-    public getShare (collection: string) : any {
+    public getCoreV2Share (collection: string) : any {
         const localVarPath = this.basePath + '/api/v2/collections/{collection}/share'
             .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
         let localVarQueryParameters: any = {};
@@ -5188,7 +8274,7 @@ export class CoreV2Api {
 
         // verify required parameter 'collection' is not null or undefined
         if (collection === null || collection === undefined) {
-            throw new Error('Required parameter collection was null or undefined when calling getShare.');
+            throw new Error('Required parameter collection was null or undefined when calling getCoreV2Share.');
         }
 
 
@@ -5235,11 +8321,11 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get single user
+     * @summary Get user
      * @param user Resource identifier
      * @param attributes Filter attributes
      */
-    public getUser (user: string, attributes?: Array<string>) : any {
+    public getCoreV2User (user: string, attributes?: Array<string>) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -5248,7 +8334,7 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling getUser.');
+            throw new Error('Required parameter user was null or undefined when calling getCoreV2User.');
         }
 
         if (attributes !== undefined) {
@@ -5302,7 +8388,7 @@ export class CoreV2Api {
      * @summary Get user avatar
      * @param user Resource identifier
      */
-    public getUserAvatar (user: string) : any {
+    public getCoreV2UserAvatar (user: string) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}/avatar'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -5311,7 +8397,7 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling getUserAvatar.');
+            throw new Error('Required parameter user was null or undefined when calling getCoreV2UserAvatar.');
         }
 
 
@@ -5336,17 +8422,16 @@ export class CoreV2Api {
             }
         }
 
-        var returnType = "CoreV2User";
+        var returnType = "";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: CoreV2User;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2User");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -5358,7 +8443,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Request all groups of a user
+     * @summary Get all groups of a user
      * @param user Resource identifier
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
@@ -5366,7 +8451,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getUserGroups (user: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2UserGroups (user: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}/groups'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -5375,7 +8460,7 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling getUserGroups.');
+            throw new Error('Required parameter user was null or undefined when calling getCoreV2UserGroups.');
         }
 
         if (query !== undefined) {
@@ -5441,7 +8526,7 @@ export class CoreV2Api {
         });
     }
     /**
-     * A user is a colletion of users
+     * 
      * @summary Get users
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
@@ -5449,7 +8534,7 @@ export class CoreV2Api {
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getUsers (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV2Users (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/users';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -5497,17 +8582,17 @@ export class CoreV2Api {
             }
         }
 
-        var returnType = "Array<CoreV2Users>";
+        var returnType = "CoreV2Users";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: Array<CoreV2Users>;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Users;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "Array<CoreV2Users>");
+                    body = ObjectSerializer.deserialize(body, "CoreV2Users");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -5519,9 +8604,9 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Get server status
+     * @summary Get server status (API v2)
      */
-    public getV2 () : any {
+    public getCoreV2V2 () : any {
         const localVarPath = this.basePath + '/api/v2';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -5570,11 +8655,11 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Move node (Change parent collection), single or multiple ones
+     * Move node (Change parent collection), single or multiple ones
+     * @summary Move node
      * @param node Node identifier
      * @param destid Destination collection, if this is null root is taken
-     * @param conflict Conflict resolution
+     * @param conflict core.v2.Conflict resolution
      */
     public moveNode (node: string, destid?: string, conflict?: number) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/move'
@@ -5640,11 +8725,11 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Set attributes for group
+     * @summary Change group
      * @param group Resource identifier
      * @param body Set attributes for group
      */
-    public patchGroup (group: string, body: CoreV2Group) : any {
+    public patchCoreV2Group (group: string, body: CoreV2Group) : any {
         const localVarPath = this.basePath + '/api/v2/groups/{group}'
             .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
         let localVarQueryParameters: any = {};
@@ -5653,12 +8738,12 @@ export class CoreV2Api {
 
         // verify required parameter 'group' is not null or undefined
         if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling patchGroup.');
+            throw new Error('Required parameter group was null or undefined when calling patchCoreV2Group.');
         }
 
         // verify required parameter 'body' is not null or undefined
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling patchGroup.');
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV2Group.');
         }
 
 
@@ -5706,11 +8791,77 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Set attributes for user
+     * @summary Change node
+     * @param node Node identifier
+     * @param body Change attributes 
+     */
+    public patchCoreV2Node (node: string, body: CoreV2Node) : any {
+        const localVarPath = this.basePath + '/api/v2/nodes/{node}'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling patchCoreV2Node.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV2Node.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "CoreV2Node")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2Node";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Node;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2Node");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Update user
      * @param user Resource identifier
      * @param body Set attributes for user
      */
-    public patchUser (user: string, body: CoreV2User) : any {
+    public patchCoreV2User (user: string, body: CoreV2User) : any {
         const localVarPath = this.basePath + '/api/v2/users/{user}'
             .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
         let localVarQueryParameters: any = {};
@@ -5719,12 +8870,12 @@ export class CoreV2Api {
 
         // verify required parameter 'user' is not null or undefined
         if (user === null || user === undefined) {
-            throw new Error('Required parameter user was null or undefined when calling patchUser.');
+            throw new Error('Required parameter user was null or undefined when calling patchCoreV2User.');
         }
 
         // verify required parameter 'body' is not null or undefined
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling patchUser.');
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV2User.');
         }
 
 
@@ -5771,11 +8922,12 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Rollback to a recent version from history. Use the version number from history.
+     * Rollback to a recent version from history. Use the version number from history.
+     * @summary Rollback file
      * @param file File identifier
+     * @param version File version to rollback
      */
-    public rollbackFile (file: string) : any {
+    public rollbackFile (file: string, version: number) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/restore'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
@@ -5785,6 +8937,15 @@ export class CoreV2Api {
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
             throw new Error('Required parameter file was null or undefined when calling rollbackFile.');
+        }
+
+        // verify required parameter 'version' is not null or undefined
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling rollbackFile.');
+        }
+
+        if (version !== undefined) {
+            localVarQueryParameters['version'] = ObjectSerializer.serialize(version, "number");
         }
 
 
@@ -5830,8 +8991,8 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Create a new share from an existing collection
+     * Create a new share from an existing collection
+     * @summary Create share
      * @param collection Collection identifier
      * @param body Create a new share from an existing collection 
      */
@@ -5896,67 +9057,8 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Restore deleted group
-     * @param group Resource identifier
-     */
-    public undeleteGroup (group: string) : any {
-        const localVarPath = this.basePath + '/api/v2/groups/{group}/undelete'
-            .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'group' is not null or undefined
-        if (group === null || group === undefined) {
-            throw new Error('Required parameter group was null or undefined when calling undeleteGroup.');
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'POST',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "CoreV2Group";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: CoreV2Group;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2Group");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
-     * @summary Undelete (Restore from trash) a single node or multiple ones.
+     * Undelete (Restore from trash) a single node or multiple ones.
+     * @summary Restore node
      * @param node Node identifier
      * @param move If node should also be moved during undelete
      * @param destid If node should also be moved during undelete
@@ -6030,7 +9132,7 @@ export class CoreV2Api {
     }
     /**
      * 
-     * @summary Restore deleted user
+     * @summary Restore user
      * @param user Resource identifier
      */
     public undeleteUser (user: string) : any {
@@ -6088,77 +9190,16 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Change attributes
-     * @param node Node identifier
-     * @param body Change attributes 
-     */
-    public updateNode (node: string, body: CoreV2Node) : any {
-        const localVarPath = this.basePath + '/api/v2/nodes/{node}'
-            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'node' is not null or undefined
-        if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling updateNode.');
-        }
-
-        // verify required parameter 'body' is not null or undefined
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling updateNode.');
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'PATCH',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-            body: ObjectSerializer.serialize(body, "CoreV2Node")
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "CoreV2Node";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: CoreV2Node;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "CoreV2Node");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
-     * @summary Upload a file chunk. You have to manually splitt the binary data into multiple chunks and upload them successively! using this method. Once uploading the last chunk, the server will automatically create or update the file node. You may set the parent collection, name and or custom attributes only with the last request to save traffic.
+     * Upload a file chunk. You have to manually splitt the binary data into multiple chunks and upload them successively using this method. Once uploading the last chunk, the server will automatically create or update the file node. You may set the parent collection, name and or custom attributes only with the last request to save traffic.
+     * @summary Resumeable upload file (chunked)
      * @param body File content
+     * @param index The current chunk
+     * @param chunks The total number of chunks
+     * @param session The the name of the chunk session issued by the server after submiting the first chunk
+     * @param name The name of the file
+     * @param collection The if of the parent collection
      */
-    public uploadChunk (body: string) : any {
+    public uploadChunk (body: string, index?: number, chunks?: number, session?: string, name?: string, collection?: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/chunk';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -6169,6 +9210,26 @@ export class CoreV2Api {
             throw new Error('Required parameter body was null or undefined when calling uploadChunk.');
         }
 
+        if (index !== undefined) {
+            localVarQueryParameters['index'] = ObjectSerializer.serialize(index, "number");
+        }
+
+        if (chunks !== undefined) {
+            localVarQueryParameters['chunks'] = ObjectSerializer.serialize(chunks, "number");
+        }
+
+        if (session !== undefined) {
+            localVarQueryParameters['session'] = ObjectSerializer.serialize(session, "string");
+        }
+
+        if (name !== undefined) {
+            localVarQueryParameters['name'] = ObjectSerializer.serialize(name, "string");
+        }
+
+        if (collection !== undefined) {
+            localVarQueryParameters['collection'] = ObjectSerializer.serialize(collection, "string");
+        }
+
 
         let localVarUseFormData = false;
 
@@ -6213,16 +9274,26 @@ export class CoreV2Api {
         });
     }
     /**
-     * 
-     * @summary Upload an entire file in one-shot. Use this endpoint only for small files, for bigger files use the chunking endpoint.
+     * Upload an entire file in one-shot. Use this endpoint only for small files, for bigger files use the chunking endpoint.
+     * @summary Upload file
      * @param body File content
+     * @param name The name of the file
+     * @param collection The if of the parent collection
      */
-    public uploadFile (body?: string) : any {
+    public uploadFile (body?: string, name?: string, collection?: string) : any {
         const localVarPath = this.basePath + '/api/v2/files';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
+        if (name !== undefined) {
+            localVarQueryParameters['name'] = ObjectSerializer.serialize(name, "string");
+        }
+
+        if (collection !== undefined) {
+            localVarQueryParameters['collection'] = ObjectSerializer.serialize(collection, "string");
+        }
+
 
         let localVarUseFormData = false;
 
@@ -6267,21 +9338,27 @@ export class CoreV2Api {
         });
     }
 }
-export enum DesktopclientV2ApiApiKeys {
+export enum CoreV3ApiApiKeys {
+    BearerAuth,
 }
 
-export class DesktopclientV2Api {
+export class CoreV3Api {
     protected _basePath = defaultBasePath;
     protected defaultHeaders : any = {};
     protected _useQuerystring : boolean = false;
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -6308,36 +9385,38 @@ export class DesktopclientV2Api {
 	this.authentications.default = auth;
     }
 
-    public setApiKey(key: DesktopclientV2ApiApiKeys, value: string) {
-        (this.authentications as any)[DesktopclientV2ApiApiKeys[key]].apiKey = value;
+    public setApiKey(key: CoreV3ApiApiKeys, value: string) {
+        (this.authentications as any)[CoreV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
     }
     /**
      * 
-     * @summary Download balloon desktop client
-     * @param format Request client foramt (deb, rpm, exe, pkg, zip or a custom format)
+     * @summary Add access-role
+     * @param data 
      */
-    public getDesktopClient (format: 'deb' | 'rpm' | 'exe' | 'pkg' | 'zip') : any {
-        const localVarPath = this.basePath + '/api/v2/desktop-clients/{format}/content'
-            .replace('{' + 'format' + '}', encodeURIComponent(String(format)));
+    public addCoreV3AccessRole (data?: CoreV3AccessRole) : any {
+        const localVarPath = this.basePath + '/api/v3/access-roles';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
-
-        // verify required parameter 'format' is not null or undefined
-        if (format === null || format === undefined) {
-            throw new Error('Required parameter format was null or undefined when calling getDesktopClient.');
-        }
 
 
         let localVarUseFormData = false;
 
         let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
+            method: 'POST',
             qs: localVarQueryParameters,
             headers: localVarHeaderParams,
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
-            encoding: null,
+            json: true,
+            body: ObjectSerializer.serialize(data, "CoreV3AccessRole")
         };
 
         this.authentications.default.applyToRequest(localVarRequestOptions);
@@ -6350,17 +9429,17 @@ export class DesktopclientV2Api {
             }
         }
 
-        var returnType = "Buffer";
+        var returnType = "CoreV3AccessRole";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRole;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRole");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -6370,66 +9449,296 @@ export class DesktopclientV2Api {
             });
         });
     }
-}
-export enum NotificationV2ApiApiKeys {
-}
-
-export class NotificationV2Api {
-    protected _basePath = defaultBasePath;
-    protected defaultHeaders : any = {};
-    protected _useQuerystring : boolean = false;
-
-    protected authentications = {
-        'default': <Authentication>new VoidAuth(),
-    }
-
-    constructor(basePath?: string);
-    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
-        if (password) {
-            if (basePath) {
-                this.basePath = basePath;
-            }
-        } else {
-            if (basePathOrUsername) {
-                this.basePath = basePathOrUsername
-            }
-        }
-    }
-
-    set useQuerystring(value: boolean) {
-        this._useQuerystring = value;
-    }
-
-    set basePath(basePath: string) {
-        this._basePath = basePath;
-    }
-
-    get basePath() {
-        return this._basePath;
-    }
-
-    public setDefaultAuthentication(auth: Authentication) {
-	this.authentications.default = auth;
-    }
-
-    public setApiKey(key: NotificationV2ApiApiKeys, value: string) {
-        (this.authentications as any)[NotificationV2ApiApiKeys[key]].apiKey = value;
-    }
     /**
      * 
-     * @summary Delete a notification
-     * @param notification Resource identifier
+     * @summary Add access-rule
+     * @param data 
      */
-    public deleteNotification (notification: string) : any {
-        const localVarPath = this.basePath + '/api/v2/notifications/{notification}'
-            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
+    public addCoreV3AccessRule (data?: CoreV3AccessRule) : any {
+        const localVarPath = this.basePath + '/api/v3/access-rules';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'notification' is not null or undefined
-        if (notification === null || notification === undefined) {
-            throw new Error('Required parameter notification was null or undefined when calling deleteNotification.');
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(data, "CoreV3AccessRule")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRule";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRule;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRule");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Add group
+     * @param data 
+     */
+    public addCoreV3Group (data?: CoreV3Group) : any {
+        const localVarPath = this.basePath + '/api/v3/groups';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(data, "CoreV3Group")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Group";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Group;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Group");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Add node
+     * @param body Node 
+     */
+    public addCoreV3Node (body: CoreV3Node) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addCoreV3Node.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "CoreV3Node")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Node";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Node;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Node");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Add session
+     * @param data 
+     */
+    public addCoreV3Session (data?: CoreV3Session) : any {
+        const localVarPath = this.basePath + '/api/v3/sessions';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(data, "CoreV3Session")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Session";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Session;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Session");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Add user
+     * @param data 
+     */
+    public addCoreV3User (data?: CoreV3User) : any {
+        const localVarPath = this.basePath + '/api/v3/users';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(data, "CoreV3User")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3User";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3User;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3User");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete access-role
+     * @param accessRole Resource identifier
+     */
+    public deleteCoreV3AccessRole (accessRole: string) : any {
+        const localVarPath = this.basePath + '/api/v3/access-roles/{accessRole}'
+            .replace('{' + 'accessRole' + '}', encodeURIComponent(String(accessRole)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRole' is not null or undefined
+        if (accessRole === null || accessRole === undefined) {
+            throw new Error('Required parameter accessRole was null or undefined when calling deleteCoreV3AccessRole.');
         }
 
 
@@ -6475,14 +9784,3705 @@ export class NotificationV2Api {
     }
     /**
      * 
-     * @summary Get my nofitifications
+     * @summary Delete access-rule
+     * @param accessRule Resource identifier
+     */
+    public deleteCoreV3AccessRule (accessRule: string) : any {
+        const localVarPath = this.basePath + '/api/v3/access-rules/{accessRule}'
+            .replace('{' + 'accessRule' + '}', encodeURIComponent(String(accessRule)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRule' is not null or undefined
+        if (accessRule === null || accessRule === undefined) {
+            throw new Error('Required parameter accessRule was null or undefined when calling deleteCoreV3AccessRule.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete group
+     * @param group Resource identifier
+     */
+    public deleteCoreV3Group (group: string) : any {
+        const localVarPath = this.basePath + '/api/v3/groups/{group}'
+            .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'group' is not null or undefined
+        if (group === null || group === undefined) {
+            throw new Error('Required parameter group was null or undefined when calling deleteCoreV3Group.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete node
+     * @param node Node identifier
+     */
+    public deleteCoreV3Node (node: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling deleteCoreV3Node.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Process";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Process;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Process");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete process
+     * @param process Resource identifier
+     */
+    public deleteCoreV3Process (process: string) : any {
+        const localVarPath = this.basePath + '/api/v3/processes/{process}'
+            .replace('{' + 'process' + '}', encodeURIComponent(String(process)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'process' is not null or undefined
+        if (process === null || process === undefined) {
+            throw new Error('Required parameter process was null or undefined when calling deleteCoreV3Process.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete session
+     * @param session Resource identifier
+     */
+    public deleteCoreV3Session (session: string) : any {
+        const localVarPath = this.basePath + '/api/v3/sessions/{session}'
+            .replace('{' + 'session' + '}', encodeURIComponent(String(session)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'session' is not null or undefined
+        if (session === null || session === undefined) {
+            throw new Error('Required parameter session was null or undefined when calling deleteCoreV3Session.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete user
+     * @param user Resource identifier
+     */
+    public deleteCoreV3User (user: string) : any {
+        const localVarPath = this.basePath + '/api/v3/users/{user}'
+            .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'user' is not null or undefined
+        if (user === null || user === undefined) {
+            throw new Error('Required parameter user was null or undefined when calling deleteCoreV3User.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get access-role
+     * @param accessRole Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3AccessRole (accessRole: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/access-roles/{accessRole}'
+            .replace('{' + 'accessRole' + '}', encodeURIComponent(String(accessRole)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRole' is not null or undefined
+        if (accessRole === null || accessRole === undefined) {
+            throw new Error('Required parameter accessRole was null or undefined when calling getCoreV3AccessRole.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRole";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRole;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRole");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get access-rule
+     * @param accessRule Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3AccessRule (accessRule: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/access-rules/{accessRule}'
+            .replace('{' + 'accessRule' + '}', encodeURIComponent(String(accessRule)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRule' is not null or undefined
+        if (accessRule === null || accessRule === undefined) {
+            throw new Error('Required parameter accessRule was null or undefined when calling getCoreV3AccessRule.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRule";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRule;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRule");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get collection children
+     * @param collection Parent collection
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param deleted Wheter to include deleted or not
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     * @param recursive Include children recursively.
+     */
+    public getCoreV3Children (collection: string, query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
+        const localVarPath = this.basePath + '/api/v3/collections/{collection}/children'
+            .replace('{' + 'collection' + '}', encodeURIComponent(String(collection)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'collection' is not null or undefined
+        if (collection === null || collection === undefined) {
+            throw new Error('Required parameter collection was null or undefined when calling getCoreV3Children.');
+        }
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+        if (recursive !== undefined) {
+            localVarQueryParameters['recursive'] = ObjectSerializer.serialize(recursive, "boolean");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Nodes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Nodes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Nodes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get collections
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param deleted Wheter to include deleted or not
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Collections (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/collections';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Collections";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Collections;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Collections");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Stream file contents.
+     * @summary Download node content.
+     * @param file Node identifier
+     * @param Range Read stream from a specific offset/limit in bytes.
+     * @param encode Can be set to base64 to encode content as base64.
+     * @param download Force download file (Content-Disposition: attachment HTTP header)
+     */
+    public getCoreV3Content (file: string, Range?: string, encode?: 'base64', download?: boolean) : any {
+        const localVarPath = this.basePath + '/api/v3/file/{file}/content'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3Content.');
+        }
+
+        if (encode !== undefined) {
+            localVarQueryParameters['encode'] = ObjectSerializer.serialize(encode, "'base64'");
+        }
+
+        if (download !== undefined) {
+            localVarQueryParameters['download'] = ObjectSerializer.serialize(download, "boolean");
+        }
+
+        localVarHeaderParams['Range'] = ObjectSerializer.serialize(Range, "string");
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            encoding: null,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "Buffer";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * A access-role is a colletion of users
+     * @summary Get access-roles
      * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
      * @param attributes Filter attributes
      * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
      * @param limit Objects limit, per default 20 objects will get returned
      * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
      */
-    public getMyNotifications (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+    public getCoreV3CoreV3AccessRoles (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/access-roles';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRoles";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRoles;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRoles");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * A access-rule is a colletion of users
+     * @summary Get access-rules
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3CoreV3AccessRules (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/access-rules';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRules";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRules;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRules");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get server status
+     */
+    public getCoreV3CoreV3Api () : any {
+        const localVarPath = this.basePath + '/api/v3';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3ApiRoot";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3ApiRoot;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3ApiRoot");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * A group is a colletion of users
+     * @summary Get groups
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3CoreV3Groups (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/groups';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Groups";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Groups;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Groups");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get current user
+     * @param attributes Filter attributes
+     */
+    public getCoreV3CurrentUser (attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/users/whoami';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3User";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3User;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3User");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Return deleted nodes (Excluding sub nodes of deleted collections)
+     * @summary Get deleted nodes
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3DeletedNodes (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/trash';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Nodes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Nodes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Nodes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get event
+     * @summary Get events
+     * @param event Event identifier
+     */
+    public getCoreV3Event (event: string) : any {
+        const localVarPath = this.basePath + '/api/v3/events/{event}'
+            .replace('{' + 'event' + '}', encodeURIComponent(String(event)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'event' is not null or undefined
+        if (event === null || event === undefined) {
+            throw new Error('Required parameter event was null or undefined when calling getCoreV3Event.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Event";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Event;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Event");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get events containing all operations which are made by the user himself or share members
+     * @summary Get events
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Events (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/events';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Events";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Events;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Events");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get file history
+     * @param file File identifier
+     */
+    public getCoreV3FileHistory (file: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/history'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3FileHistory.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3FileHistory";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3FileHistory;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3FileHistory");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get files
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param deleted Wheter to include deleted or not
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Files (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Files";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Files;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Files");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get group
+     * @param group Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3Group (group: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/groups/{group}'
+            .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'group' is not null or undefined
+        if (group === null || group === undefined) {
+            throw new Error('Required parameter group was null or undefined when calling getCoreV3Group.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Group";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Group;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Group");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get group members
+     * @param group Resource identifier
+     */
+    public getCoreV3GroupMembers (group: string) : any {
+        const localVarPath = this.basePath + '/api/v3/groups/{group}/members'
+            .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'group' is not null or undefined
+        if (group === null || group === undefined) {
+            throw new Error('Required parameter group was null or undefined when calling getCoreV3GroupMembers.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Users";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Users;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Users");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get node
+     * @param node Node identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3Node (node: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling getCoreV3Node.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Node";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Node;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Node");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get event containing all operations which are made by the user or share members on a given node
+     * @summary Get event
+     * @param node Node identifier
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3NodeEvents (node: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}/events'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling getCoreV3NodeEvents.');
+        }
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Events";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Events;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Events");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get process containing all operations which are made by the user or share members on a given node
+     * @summary Get process
+     * @param node Node identifier
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3NodeProcesses (node: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}/processes'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling getCoreV3NodeProcesses.');
+        }
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Processes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Processes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Processes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get all nodes
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param deleted Wheter to include deleted or not
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Nodes (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Nodes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Nodes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Nodes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * The hirarchy of all parent nodes is ordered in a single level array beginning with the collection on the highest level.
+     * @summary Get parent collections
+     * @param node Node identifier
+     * @param attributes Filter attributes
+     * @param self Include requested collection itself at the end of the list (Will be ignored if the requested node is a file)
+     */
+    public getCoreV3ParentNodes (node: string, attributes?: Array<string>, self?: boolean) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}/parents'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling getCoreV3ParentNodes.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (self !== undefined) {
+            localVarQueryParameters['self'] = ObjectSerializer.serialize(self, "boolean");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Collections";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Collections;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Collections");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get process
+     * @param process Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3Process (process: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/processes/{process}'
+            .replace('{' + 'process' + '}', encodeURIComponent(String(process)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'process' is not null or undefined
+        if (process === null || process === undefined) {
+            throw new Error('Required parameter process was null or undefined when calling getCoreV3Process.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Process";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Process;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Process");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Async processes
+     * @summary Get processes
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Processes (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/processes';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Processes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Processes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Processes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get root children
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param deleted Wheter to include deleted or not
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     * @param recursive Include children recursively.
+     */
+    public getCoreV3RootChildren (query?: string, deleted?: number, attributes?: Array<string>, offset?: number, limit?: number, sort?: string, recursive?: boolean) : any {
+        const localVarPath = this.basePath + '/api/v3/collections/children';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+        if (recursive !== undefined) {
+            localVarQueryParameters['recursive'] = ObjectSerializer.serialize(recursive, "boolean");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Nodes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Nodes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Nodes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get session
+     * @param session Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3Session (session: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/sessions/{session}'
+            .replace('{' + 'session' + '}', encodeURIComponent(String(session)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'session' is not null or undefined
+        if (session === null || session === undefined) {
+            throw new Error('Required parameter session was null or undefined when calling getCoreV3Session.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Session";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Session;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Session");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Upload sessions
+     * @summary Get sessions
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Sessions (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/sessions';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Sessions";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Sessions;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Sessions");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get user
+     * @param user Resource identifier
+     * @param attributes Filter attributes
+     */
+    public getCoreV3User (user: string, attributes?: Array<string>) : any {
+        const localVarPath = this.basePath + '/api/v3/users/{user}'
+            .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'user' is not null or undefined
+        if (user === null || user === undefined) {
+            throw new Error('Required parameter user was null or undefined when calling getCoreV3User.');
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3User";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3User;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3User");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get user avatar
+     * @param user Resource identifier
+     */
+    public getCoreV3UserAvatar (user: string) : any {
+        const localVarPath = this.basePath + '/api/v3/users/{user}/avatar'
+            .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'user' is not null or undefined
+        if (user === null || user === undefined) {
+            throw new Error('Required parameter user was null or undefined when calling getCoreV3UserAvatar.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3User";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3User;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3User");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get all groups of a user
+     * @param user Resource identifier
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3UserGroups (user: string, query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/users/{user}/groups'
+            .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'user' is not null or undefined
+        if (user === null || user === undefined) {
+            throw new Error('Required parameter user was null or undefined when calling getCoreV3UserGroups.');
+        }
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Groups";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Groups;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Groups");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get users
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Users (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/users';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Users";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Users;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Users");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Stream file contents.
+     * @summary Download node content.
+     * @param node Node identifier
+     */
+    public getCoreV3Zip (node: string) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}/zip'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling getCoreV3Zip.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            encoding: null,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "Buffer";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Change access-role
+     * @param accessRole Resource identifier
+     * @param body Set attributes for access-role
+     */
+    public patchCoreV3AccessRole (accessRole: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/access-roles/{accessRole}'
+            .replace('{' + 'accessRole' + '}', encodeURIComponent(String(accessRole)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRole' is not null or undefined
+        if (accessRole === null || accessRole === undefined) {
+            throw new Error('Required parameter accessRole was null or undefined when calling patchCoreV3AccessRole.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3AccessRole.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRole";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRole;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRole");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Change access-rule
+     * @param accessRule Resource identifier
+     * @param body Set attributes for access-rule
+     */
+    public patchCoreV3AccessRule (accessRule: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/access-rules/{accessRule}'
+            .replace('{' + 'accessRule' + '}', encodeURIComponent(String(accessRule)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'accessRule' is not null or undefined
+        if (accessRule === null || accessRule === undefined) {
+            throw new Error('Required parameter accessRule was null or undefined when calling patchCoreV3AccessRule.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3AccessRule.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3AccessRule";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3AccessRule;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3AccessRule");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Change group
+     * @param group Resource identifier
+     * @param body Set attributes for group
+     */
+    public patchCoreV3Group (group: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/groups/{group}'
+            .replace('{' + 'group' + '}', encodeURIComponent(String(group)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'group' is not null or undefined
+        if (group === null || group === undefined) {
+            throw new Error('Required parameter group was null or undefined when calling patchCoreV3Group.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3Group.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Group";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Group;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Group");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Change node
+     * @param node Node identifier
+     * @param body Change attributes 
+     */
+    public patchCoreV3Node (node: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/nodes/{node}'
+            .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'node' is not null or undefined
+        if (node === null || node === undefined) {
+            throw new Error('Required parameter node was null or undefined when calling patchCoreV3Node.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3Node.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Node";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Node;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Node");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Change session
+     * @param session Resource identifier
+     * @param body Set attributes for session
+     */
+    public patchCoreV3Session (session: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/sessions/{session}'
+            .replace('{' + 'session' + '}', encodeURIComponent(String(session)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'session' is not null or undefined
+        if (session === null || session === undefined) {
+            throw new Error('Required parameter session was null or undefined when calling patchCoreV3Session.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3Session.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3Session";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3Session;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3Session");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Update user
+     * @param user Resource identifier
+     * @param body Set attributes for user
+     */
+    public patchCoreV3User (user: string, body: JsonPatch) : any {
+        const localVarPath = this.basePath + '/api/v3/users/{user}'
+            .replace('{' + 'user' + '}', encodeURIComponent(String(user)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'user' is not null or undefined
+        if (user === null || user === undefined) {
+            throw new Error('Required parameter user was null or undefined when calling patchCoreV3User.');
+        }
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling patchCoreV3User.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "JsonPatch")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3User";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3User;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3User");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum DesktopclientV2ApiApiKeys {
+    BearerAuth,
+}
+
+export class DesktopclientV2Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: DesktopclientV2ApiApiKeys, value: string) {
+        (this.authentications as any)[DesktopclientV2ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Download balloon desktop client
+     * @param format Request client foramt (deb, rpm, exe, pkg, zip or a custom format)
+     */
+    public getCoreV2DesktopClient (format: 'deb' | 'rpm' | 'exe' | 'pkg' | 'zip') : any {
+        const localVarPath = this.basePath + '/api/v2/desktop-clients/{format}/content'
+            .replace('{' + 'format' + '}', encodeURIComponent(String(format)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'format' is not null or undefined
+        if (format === null || format === undefined) {
+            throw new Error('Required parameter format was null or undefined when calling getCoreV2DesktopClient.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            encoding: null,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "Buffer";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum DesktopclientV3ApiApiKeys {
+    BearerAuth,
+}
+
+export class DesktopclientV3Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: DesktopclientV3ApiApiKeys, value: string) {
+        (this.authentications as any)[DesktopclientV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Download balloon desktop client
+     * @param format Request client foramt (deb, rpm, exe, pkg, zip or a custom format)
+     */
+    public getCoreV3DesktopClient (format: 'deb' | 'rpm' | 'exe' | 'pkg' | 'zip') : any {
+        const localVarPath = this.basePath + '/api/v3/desktop-clients/{format}/content'
+            .replace('{' + 'format' + '}', encodeURIComponent(String(format)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'format' is not null or undefined
+        if (format === null || format === undefined) {
+            throw new Error('Required parameter format was null or undefined when calling getCoreV3DesktopClient.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            encoding: null,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "Buffer";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: Buffer;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "Buffer");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum ElasticsearchV2ApiApiKeys {
+    BearerAuth,
+}
+
+export class ElasticsearchV2Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: ElasticsearchV2ApiApiKeys, value: string) {
+        (this.authentications as any)[ElasticsearchV2ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Extended search query using elasticsearch
+     * @param query Elasticsearch query as JSON
+     * @param deleted Wherever include deleted nodes or not, possible values:  0 Exclude deleted 1 Only deleted 2 Include deleted.
+     */
+    public queryElasticsearch (query: string, deleted?: number) : any {
+        const localVarPath = this.basePath + '/api/v2/nodes/search';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'query' is not null or undefined
+        if (query === null || query === undefined) {
+            throw new Error('Required parameter query was null or undefined when calling queryElasticsearch.');
+        }
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (deleted !== undefined) {
+            localVarQueryParameters['deleted'] = ObjectSerializer.serialize(deleted, "number");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2Nodes";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2Nodes;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2Nodes");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum FeedbackV2ApiApiKeys {
+    BearerAuth,
+}
+
+export class FeedbackV2Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: FeedbackV2ApiApiKeys, value: string) {
+        (this.authentications as any)[FeedbackV2ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * Submit feedback
+     * @summary Submit a feedback to the developers of balloon (or another destination). You may submit some metadata and a zipped collection of debug information.
+     * @param feedback The feedback must be a user written feedback.
+     * @param report The report is an application/zip which may hold various files and metadata from a client system. For example this may be log files and system information about a client.
+     */
+    public submitFeedback (feedback: string, report?: Buffer) : any {
+        const localVarPath = this.basePath + '/api/v2/feedbacks';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'feedback' is not null or undefined
+        if (feedback === null || feedback === undefined) {
+            throw new Error('Required parameter feedback was null or undefined when calling submitFeedback.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        if (feedback !== undefined) {
+            localVarFormParams['feedback'] = ObjectSerializer.serialize(feedback, "string");
+        }
+
+        if (report !== undefined) {
+            localVarFormParams['report'] = report;
+        }
+        localVarUseFormData = true;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum NotificationV2ApiApiKeys {
+    BearerAuth,
+}
+
+export class NotificationV2Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: NotificationV2ApiApiKeys, value: string) {
+        (this.authentications as any)[NotificationV2ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Delete notification
+     * @param notification Resource identifier
+     */
+    public deleteCoreV2Notification (notification: string) : any {
+        const localVarPath = this.basePath + '/api/v2/notifications/{notification}'
+            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'notification' is not null or undefined
+        if (notification === null || notification === undefined) {
+            throw new Error('Required parameter notification was null or undefined when calling deleteCoreV2Notification.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get notification
+     * @param notification Resource identifier
+     */
+    public getCoreV2Notification (notification: string) : any {
+        const localVarPath = this.basePath + '/api/v2/notifications/{notification}'
+            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'notification' is not null or undefined
+        if (notification === null || notification === undefined) {
+            throw new Error('Required parameter notification was null or undefined when calling getCoreV2Notification.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "NotificationV2Notification";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: NotificationV2Notification;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "NotificationV2Notification");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get nofitifications
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV2Notifications (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
         const localVarPath = this.basePath + '/api/v2/notifications';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -6552,65 +13552,6 @@ export class NotificationV2Api {
     }
     /**
      * 
-     * @summary Get a single notification
-     * @param notification Resource identifier
-     */
-    public getNotification (notification: string) : any {
-        const localVarPath = this.basePath + '/api/v2/notifications/{notification}'
-            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'notification' is not null or undefined
-        if (notification === null || notification === undefined) {
-            throw new Error('Required parameter notification was null or undefined when calling getNotification.');
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "NotificationV2Notification";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: NotificationV2Notification;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "NotificationV2Notification");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
      * @summary Send notification
      * @param body 
      */
@@ -6643,17 +13584,16 @@ export class NotificationV2Api {
             }
         }
 
-        var returnType = "NotificationV2Notification";
+        var returnType = "";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: NotificationV2Notification;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "NotificationV2Notification");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -6665,10 +13605,10 @@ export class NotificationV2Api {
     }
     /**
      * 
-     * @summary Send notification to all users
+     * @summary Send broadcast
      * @param body Notification
      */
-    public sendBroadcast (body?: NotificationV2Notification) : any {
+    public sendCoreV2Broadcast (body?: NotificationV2Notification) : any {
         const localVarPath = this.basePath + '/api/v2/notifications/broadcast';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -6697,17 +13637,16 @@ export class NotificationV2Api {
             }
         }
 
-        var returnType = "NotificationV2Notification";
+        var returnType = "";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body: NotificationV2Notification;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
-                    body = ObjectSerializer.deserialize(body, "NotificationV2Notification");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
@@ -6722,7 +13661,7 @@ export class NotificationV2Api {
      * @summary Send mail
      * @param body Mail
      */
-    public sendMail (body?: NotificationV2Mail) : any {
+    public sendCoreV2Mail (body?: NotificationV2Mail) : any {
         const localVarPath = this.basePath + '/api/v2/notifications/mail';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -6772,13 +13711,14 @@ export class NotificationV2Api {
     }
     /**
      * 
-     * @summary Receive node updates
+     * @summary Subscribe node updates
      * @param node Node identifier
      * @param subscribe If true the subscription is active
      * @param exclude_me Exclude subscription owner (me) from change notifications
      * @param recursive Apply subscription to children (inclusive newly added children)
+     * @param throttle Set a custom notification throttle interval in seconds
      */
-    public subscribeNode (node: string, subscribe?: boolean, exclude_me?: boolean, recursive?: boolean) : any {
+    public subscribeNode (node: string, subscribe?: boolean, exclude_me?: boolean, recursive?: boolean, throttle?: number) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/subscription'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -6800,6 +13740,10 @@ export class NotificationV2Api {
 
         if (recursive !== undefined) {
             localVarQueryParameters['recursive'] = ObjectSerializer.serialize(recursive, "boolean");
+        }
+
+        if (throttle !== undefined) {
+            localVarQueryParameters['throttle'] = ObjectSerializer.serialize(throttle, "number");
         }
 
 
@@ -6845,7 +13789,581 @@ export class NotificationV2Api {
         });
     }
 }
+export enum NotificationV3ApiApiKeys {
+    BearerAuth,
+}
+
+export class NotificationV3Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: NotificationV3ApiApiKeys, value: string) {
+        (this.authentications as any)[NotificationV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Send notification
+     * @param body 
+     */
+    public addCoreV3Notification (body?: NotificationV3Notification) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "NotificationV3Notification")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "NotificationV3Notification";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: NotificationV3Notification;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "NotificationV3Notification");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Delete notification
+     * @param notification Resource identifier
+     */
+    public deleteCoreV3Notification (notification: string) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications/{notification}'
+            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'notification' is not null or undefined
+        if (notification === null || notification === undefined) {
+            throw new Error('Required parameter notification was null or undefined when calling deleteCoreV3Notification.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get notification
+     * @param notification Resource identifier
+     */
+    public getCoreV3Notification (notification: string) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications/{notification}'
+            .replace('{' + 'notification' + '}', encodeURIComponent(String(notification)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'notification' is not null or undefined
+        if (notification === null || notification === undefined) {
+            throw new Error('Required parameter notification was null or undefined when calling getCoreV3Notification.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "NotificationV3Notification";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: NotificationV3Notification;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "NotificationV3Notification");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get nofitifications
+     * @param query Specify a MongoDB based resource query (https://docs.mongodb.com/manual/tutorial/query-documents) using JSON (For example: {\&quot;name\&quot;: {$regex: &#39;foo.*&#39;}}).
+     * @param attributes Filter attributes
+     * @param offset Objects offset, per default it starts from 0. You may also request a negative offset which will return results from the end [total - offset].
+     * @param limit Objects limit, per default 20 objects will get returned
+     * @param sort Specify a MongoDB sort operation (https://docs.mongodb.com/manual/reference/method/cursor.sort/) using JSON (For example: {\&quot;name\&quot;: -1}).
+     */
+    public getCoreV3Notifications (query?: string, attributes?: Array<string>, offset?: number, limit?: number, sort?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        if (query !== undefined) {
+            localVarQueryParameters['query'] = ObjectSerializer.serialize(query, "string");
+        }
+
+        if (attributes !== undefined) {
+            localVarQueryParameters['attributes'] = ObjectSerializer.serialize(attributes, "Array<string>");
+        }
+
+        if (offset !== undefined) {
+            localVarQueryParameters['offset'] = ObjectSerializer.serialize(offset, "number");
+        }
+
+        if (limit !== undefined) {
+            localVarQueryParameters['limit'] = ObjectSerializer.serialize(limit, "number");
+        }
+
+        if (sort !== undefined) {
+            localVarQueryParameters['sort'] = ObjectSerializer.serialize(sort, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "NotificationV3Notifications";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: NotificationV3Notifications;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "NotificationV3Notifications");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Send broadcast
+     * @param body Notification
+     */
+    public sendCoreV3Broadcast (body?: NotificationV3Notification) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications/broadcast';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "NotificationV3Notification")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "NotificationV3Notification";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: NotificationV3Notification;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "NotificationV3Notification");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Send mail
+     * @param body Mail
+     */
+    public sendCoreV3Mail (body?: NotificationV3Mail) : any {
+        const localVarPath = this.basePath + '/api/v3/notifications/mail';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "NotificationV3Mail")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum OpenapiApiApiKeys {
+    BearerAuth,
+}
+
+export class OpenapiApi {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: OpenapiApiApiKeys, value: string) {
+        (this.authentications as any)[OpenapiApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * 
+     * @summary Get openapi v2 (swagger) specs
+     */
+    public getOpenApiV2 () : any {
+        const localVarPath = this.basePath + '/openapi/v2';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @summary Get openapi v3 specs
+     */
+    public getOpenApiV3 () : any {
+        const localVarPath = this.basePath + '/openapi/v3';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
 export enum PreviewV2ApiApiKeys {
+    BearerAuth,
 }
 
 export class PreviewV2Api {
@@ -6855,11 +14373,16 @@ export class PreviewV2Api {
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -6889,13 +14412,19 @@ export class PreviewV2Api {
     public setApiKey(key: PreviewV2ApiApiKeys, value: string) {
         (this.authentications as any)[PreviewV2ApiApiKeys[key]].apiKey = value;
     }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
     /**
-     * 
-     * @summary Get a preview of the files content. The body either contains an encoded string or a jpeg binary.
+     * Delete preview
+     * @summary Delete an existing preview
      * @param file File identifier
-     * @param encode Set to base64 to return a jpeg encoded preview as base64, else return it as jpeg binary
      */
-    public getPreview (file: string, encode?: string) : any {
+    public deleteCoreV2Preview (file: string) : any {
         const localVarPath = this.basePath + '/api/v2/files/{file}/preview'
             .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
@@ -6904,7 +14433,246 @@ export class PreviewV2Api {
 
         // verify required parameter 'file' is not null or undefined
         if (file === null || file === undefined) {
-            throw new Error('Required parameter file was null or undefined when calling getPreview.');
+            throw new Error('Required parameter file was null or undefined when calling deleteCoreV2Preview.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'DELETE',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Get preview
+     * @summary Get a preview of the files content. The body either contains an encoded string or a jpeg binary.
+     * @param file File identifier
+     * @param encode Set to base64 to return a jpeg encoded preview as base64, else return it as jpeg binary
+     */
+    public getCoreV2Preview (file: string, encode?: string) : any {
+        const localVarPath = this.basePath + '/api/v2/files/{file}/preview'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV2Preview.');
+        }
+
+        if (encode !== undefined) {
+            localVarQueryParameters['encode'] = ObjectSerializer.serialize(encode, "string");
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+    /**
+     * Create preview
+     * @summary Create or replace preview of a file. A preview may be a maximum of 2MB
+     * @param file File identifier
+     */
+    public setPreview (file: string) : any {
+        const localVarPath = this.basePath + '/api/v2/files/{file}/preview'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling setPreview.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'PATCH',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV2File";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV2File;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2File");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum PreviewV3ApiApiKeys {
+    BearerAuth,
+}
+
+export class PreviewV3Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: PreviewV3ApiApiKeys, value: string) {
+        (this.authentications as any)[PreviewV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * Get preview
+     * @summary Get a preview of the files content. The body either contains an encoded string or a jpeg binary.
+     * @param file File identifier
+     * @param encode Set to base64 to return a jpeg encoded preview as base64, else return it as jpeg binary
+     */
+    public getCoreV3Preview (file: string, encode?: string) : any {
+        const localVarPath = this.basePath + '/api/v3/files/{file}/preview'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling getCoreV3Preview.');
         }
 
         if (encode !== undefined) {
@@ -6954,6 +14722,7 @@ export class PreviewV2Api {
     }
 }
 export enum SharelinkV2ApiApiKeys {
+    BearerAuth,
 }
 
 export class SharelinkV2Api {
@@ -6963,11 +14732,16 @@ export class SharelinkV2Api {
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -6997,14 +14771,21 @@ export class SharelinkV2Api {
     public setApiKey(key: SharelinkV2ApiApiKeys, value: string) {
         (this.authentications as any)[SharelinkV2ApiApiKeys[key]].apiKey = value;
     }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
     /**
-     * 
-     * @summary Create a unique sharing link of a node (global accessible): a possible existing link will be deleted if this method will be called.
+     * Create a unique share link of a node (global accessible). A possible existing link will get deleted if this endpoint gets called.
+     * @summary Create share link
      * @param node Node identifier
      * @param expiration Expire timestamp as unix timestap. Tells the server when the public link should expire automatically. The default is to never expire.
      * @param password Optionally set a password to protect the public link.
      */
-    public createLink (node: string, expiration?: number, password?: string) : any {
+    public addCoreV2Link (node: string, expiration?: number, password?: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/share-link'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -7013,7 +14794,7 @@ export class SharelinkV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling createLink.');
+            throw new Error('Required parameter node was null or undefined when calling addCoreV2Link.');
         }
 
         if (expiration !== undefined) {
@@ -7068,10 +14849,10 @@ export class SharelinkV2Api {
     }
     /**
      * 
-     * @summary Delete an existing sharing link
+     * @summary Delete share link
      * @param node Node identifier
      */
-    public deleteLink (node: string) : any {
+    public deleteCoreV2Link (node: string) : any {
         const localVarPath = this.basePath + '/api/v2/nodes/{node}/share-link'
             .replace('{' + 'node' + '}', encodeURIComponent(String(node)));
         let localVarQueryParameters: any = {};
@@ -7080,7 +14861,7 @@ export class SharelinkV2Api {
 
         // verify required parameter 'node' is not null or undefined
         if (node === null || node === undefined) {
-            throw new Error('Required parameter node was null or undefined when calling deleteLink.');
+            throw new Error('Required parameter node was null or undefined when calling deleteCoreV2Link.');
         }
 
 
@@ -7126,6 +14907,7 @@ export class SharelinkV2Api {
     }
 }
 export enum WopiV2ApiApiKeys {
+    BearerAuth,
 }
 
 export class WopiV2Api {
@@ -7135,11 +14917,16 @@ export class WopiV2Api {
 
     protected authentications = {
         'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
     }
 
     constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
     constructor(basePathOrUsername: string, password?: string, basePath?: string) {
         if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
             if (basePath) {
                 this.basePath = basePath;
             }
@@ -7169,11 +14956,19 @@ export class WopiV2Api {
     public setApiKey(key: WopiV2ApiApiKeys, value: string) {
         (this.authentications as any)[WopiV2ApiApiKeys[key]].apiKey = value;
     }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
     /**
      * Create new document from an existing office document template
+     * @summary Create new document
      * @param body 
      */
-    public createDocument (body: CoreV2File) : any {
+    public addCoreV2Document (body: CoreV2File) : any {
         const localVarPath = this.basePath + '/api/v2/office/documents';
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
@@ -7181,7 +14976,7 @@ export class WopiV2Api {
 
         // verify required parameter 'body' is not null or undefined
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createDocument.');
+            throw new Error('Required parameter body was null or undefined when calling addCoreV2Document.');
         }
 
 
@@ -7228,177 +15023,26 @@ export class WopiV2Api {
         });
     }
     /**
-     * 
-     * @summary Get document session information including document owner, session user and document size
-     * @param document The document id
-     * @param access_token An access token to access the document
+     * Generate access token for a single file which is only valid for a certain time. Usually this is 30min.
+     * @summary Create access token for a file
+     * @param file File identifier
+     * @param body 
      */
-    public getWopiDocument (document: string, access_token: string) : any {
-        const localVarPath = this.basePath + '/api/v2/office/wopi/document/{document}';
+    public addWopiV2Token (file: string, body: WopiV2Token) : any {
+        const localVarPath = this.basePath + '/api/v2/files/{file}/tokens'
+            .replace('{' + 'file' + '}', encodeURIComponent(String(file)));
         let localVarQueryParameters: any = {};
         let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
         let localVarFormParams: any = {};
 
-        // verify required parameter 'document' is not null or undefined
-        if (document === null || document === undefined) {
-            throw new Error('Required parameter document was null or undefined when calling getWopiDocument.');
+        // verify required parameter 'file' is not null or undefined
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling addWopiV2Token.');
         }
 
-        // verify required parameter 'access_token' is not null or undefined
-        if (access_token === null || access_token === undefined) {
-            throw new Error('Required parameter access_token was null or undefined when calling getWopiDocument.');
-        }
-
-        if (document !== undefined) {
-            localVarQueryParameters['document'] = ObjectSerializer.serialize(document, "string");
-        }
-
-        if (access_token !== undefined) {
-            localVarQueryParameters['access_token'] = ObjectSerializer.serialize(access_token, "string");
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "OfficeV2WopiDocument";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body: OfficeV2WopiDocument;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    body = ObjectSerializer.deserialize(body, "OfficeV2WopiDocument");
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
-     * @summary Get document contents
-     * @param document The document id 
-     * @param access_token An access token to access the document
-     */
-    public getWopiDocumentContent (document: string, access_token: string) : any {
-        const localVarPath = this.basePath + '/api/v2/office/wopi/document/{document}/contents';
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'document' is not null or undefined
-        if (document === null || document === undefined) {
-            throw new Error('Required parameter document was null or undefined when calling getWopiDocumentContent.');
-        }
-
-        // verify required parameter 'access_token' is not null or undefined
-        if (access_token === null || access_token === undefined) {
-            throw new Error('Required parameter access_token was null or undefined when calling getWopiDocumentContent.');
-        }
-
-        if (document !== undefined) {
-            localVarQueryParameters['document'] = ObjectSerializer.serialize(document, "string");
-        }
-
-        if (access_token !== undefined) {
-            localVarQueryParameters['access_token'] = ObjectSerializer.serialize(access_token, "string");
-        }
-
-
-        let localVarUseFormData = false;
-
-        let localVarRequestOptions: localVarRequest.Options = {
-            method: 'GET',
-            qs: localVarQueryParameters,
-            headers: localVarHeaderParams,
-            uri: localVarPath,
-            useQuerystring: this._useQuerystring,
-            json: true,
-        };
-
-        this.authentications.default.applyToRequest(localVarRequestOptions);
-
-        if (Object.keys(localVarFormParams).length) {
-            if (localVarUseFormData) {
-                (<any>localVarRequestOptions).formData = localVarFormParams;
-            } else {
-                localVarRequestOptions.form = localVarFormParams;
-            }
-        }
-
-        var returnType = "";
-        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
-            return localVarRequest(localVarRequestOptions);
-        }
-
-        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
-            localVarRequest(localVarRequestOptions, (error, response, body) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
-                        resolve({ response: response, body: body });
-                    } else {
-                        reject({ response: response, body: body });
-                    }
-                }
-            });
-        });
-    }
-    /**
-     * 
-     * @summary Save document contents
-     * @param document The document id 
-     * @param access_token An access token to access the document
-     * @param body Document content
-     */
-    public updateWopiDocuemntContent (document: string, access_token: string, body?: string) : any {
-        const localVarPath = this.basePath + '/api/v2/office/wopi/document/{document}/contents';
-        let localVarQueryParameters: any = {};
-        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
-        let localVarFormParams: any = {};
-
-        // verify required parameter 'document' is not null or undefined
-        if (document === null || document === undefined) {
-            throw new Error('Required parameter document was null or undefined when calling updateWopiDocuemntContent.');
-        }
-
-        // verify required parameter 'access_token' is not null or undefined
-        if (access_token === null || access_token === undefined) {
-            throw new Error('Required parameter access_token was null or undefined when calling updateWopiDocuemntContent.');
-        }
-
-        if (document !== undefined) {
-            localVarQueryParameters['document'] = ObjectSerializer.serialize(document, "string");
-        }
-
-        if (access_token !== undefined) {
-            localVarQueryParameters['access_token'] = ObjectSerializer.serialize(access_token, "string");
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addWopiV2Token.');
         }
 
 
@@ -7411,7 +15055,7 @@ export class WopiV2Api {
             uri: localVarPath,
             useQuerystring: this._useQuerystring,
             json: true,
-            body: ObjectSerializer.serialize(body, "string")
+            body: ObjectSerializer.serialize(body, "WopiV2Token")
         };
 
         this.authentications.default.applyToRequest(localVarRequestOptions);
@@ -7424,16 +15068,134 @@ export class WopiV2Api {
             }
         }
 
-        var returnType = "";
+        var returnType = "CoreV2File";
         if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
             return localVarRequest(localVarRequestOptions);
         }
 
-        return new Promise<{ response: http.ClientResponse; body?: any;  }>((resolve, reject) => {
+        return new Promise<{ response: http.ClientResponse; body: CoreV2File;  }>((resolve, reject) => {
             localVarRequest(localVarRequestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                 } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV2File");
+                    if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                        resolve({ response: response, body: body });
+                    } else {
+                        reject({ response: response, body: body });
+                    }
+                }
+            });
+        });
+    }
+}
+export enum WopiV3ApiApiKeys {
+    BearerAuth,
+}
+
+export class WopiV3Api {
+    protected _basePath = defaultBasePath;
+    protected defaultHeaders : any = {};
+    protected _useQuerystring : boolean = false;
+
+    protected authentications = {
+        'default': <Authentication>new VoidAuth(),
+        'BasicAuth': new HttpBasicAuth(),
+        'BearerAuth': new ApiKeyAuth('header', 'Authorization'),
+    }
+
+    constructor(basePath?: string);
+    constructor(username: string, password: string, basePath?: string);
+    constructor(basePathOrUsername: string, password?: string, basePath?: string) {
+        if (password) {
+            this.username = basePathOrUsername;
+            this.password = password
+            if (basePath) {
+                this.basePath = basePath;
+            }
+        } else {
+            if (basePathOrUsername) {
+                this.basePath = basePathOrUsername
+            }
+        }
+    }
+
+    set useQuerystring(value: boolean) {
+        this._useQuerystring = value;
+    }
+
+    set basePath(basePath: string) {
+        this._basePath = basePath;
+    }
+
+    get basePath() {
+        return this._basePath;
+    }
+
+    public setDefaultAuthentication(auth: Authentication) {
+	this.authentications.default = auth;
+    }
+
+    public setApiKey(key: WopiV3ApiApiKeys, value: string) {
+        (this.authentications as any)[WopiV3ApiApiKeys[key]].apiKey = value;
+    }
+    set username(username: string) {
+        this.authentications.BasicAuth.username = username;
+    }
+
+    set password(password: string) {
+        this.authentications.BasicAuth.password = password;
+    }
+    /**
+     * Create new document from an existing office document template
+     * @summary Create new document
+     * @param body 
+     */
+    public addCoreV3Document (body: CoreV3File) : any {
+        const localVarPath = this.basePath + '/api/v3/office/documents';
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'body' is not null or undefined
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling addCoreV3Document.');
+        }
+
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'POST',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+            body: ObjectSerializer.serialize(body, "CoreV3File")
+        };
+
+        this.authentications.default.applyToRequest(localVarRequestOptions);
+
+        if (Object.keys(localVarFormParams).length) {
+            if (localVarUseFormData) {
+                (<any>localVarRequestOptions).formData = localVarFormParams;
+            } else {
+                localVarRequestOptions.form = localVarFormParams;
+            }
+        }
+
+        var returnType = "CoreV3File";
+        if(localVarQueryParameters['watch'] && localVarQueryParameters['watch'] === true || localVarQueryParameters['stream'] && localVarQueryParameters['stream'] === true || returnType === "Buffer") {
+            return localVarRequest(localVarRequestOptions);
+        }
+
+        return new Promise<{ response: http.ClientResponse; body: CoreV3File;  }>((resolve, reject) => {
+            localVarRequest(localVarRequestOptions, (error, response, body) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    body = ObjectSerializer.deserialize(body, "CoreV3File");
                     if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
                         resolve({ response: response, body: body });
                     } else {
